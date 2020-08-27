@@ -26,146 +26,13 @@ import os
 import argparse
 import yaml
 import csv
-from enum import Enum
 from tqdm import tqdm
+
+from CSVFormat import CSVFormat
+from ROSMessageType import ROSMessageType
 
 from script_utils.utils import *
 from tum_eval.tum_csv_header import tum_csv_header
-
-
-class ROSMessageType(Enum):
-    NOT_SUPPORTED = 0
-    # GEOMETRY_MSGS_POINT = 3 == VECTOR3
-    GEOMETRY_MSGS_POINTSTAMPED = 1  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PointStamped.html
-    GEOMETRY_MSGS_VECTOR3 = 2  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Vector3.html
-    GEOMETRY_MSGS_VECTOR3STAMPED = 3  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Vector3Stamped.html
-    GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED = 4  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseWithCovarianceStamped.html
-    GEOMETRY_MSGS_POSEWITHCOVARIANCE = 5  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseWithCovariance.html
-    GEOMETRY_MSGS_POSESTAMPED = 6  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseStamped.html
-    GEOMETRY_MSGS_POSE = 7  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Pose.html
-    GEOMETRY_MSGS_QUATERNION = 8  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Quaternion.html
-    GEOMETRY_MSGS_QUATERNIONSTAMPED = 9  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/QuaternionStamped.html
-    GEOMETRY_MSGS_TRANSFORM = 10  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Transform.html
-    GEOMETRY_MSGS_TRANSFORMSTAMPED = 11  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/TransformStamped.html
-
-
-class CSVformat(Enum):
-    TUM = 'TUM'
-    none = 'none'
-
-    def __str__(self):
-        return self.value
-
-
-def get_message_type(msg_):
-    """
-
-    :rtype: ROSMessageType
-    """
-
-    if hasattr(msg_, 'header'):  # STAMPED
-        if hasattr(msg_, 'pose') and hasattr(msg_.pose, 'covariance') and hasattr(msg_.pose, 'pose'):
-            return ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED
-
-        if hasattr(msg_, 'pose') and hasattr(msg_.pose, 'position'):
-            return ROSMessageType.GEOMETRY_MSGS_POSESTAMPED
-
-        if hasattr(msg_, 'point'):
-            return ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED
-
-        if hasattr(msg_, 'vector'):
-            return ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED
-
-        if hasattr(msg_, 'transform'):
-            return ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED
-
-        if hasattr(msg_, 'quaternion'):
-            return ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED
-
-    else:  # NOT STAMPED
-        if hasattr(msg_, 'pose') and hasattr(msg_, 'covariance'):
-            return ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE
-
-        if hasattr(msg_, 'position') and hasattr(msg_, 'orientation'):
-            return ROSMessageType.GEOMETRY_MSGS_POSE
-
-        if hasattr(msg_, 'translation') and hasattr(msg_, 'rotation'):
-            return ROSMessageType.GEOMETRY_MSGS_TRANSFORM
-
-        if hasattr(msg_, 'x') and hasattr(msg_.pose, 'y') and hasattr(msg_, 'z') and hasattr(msg_, 'w'):
-            return ROSMessageType.GEOMETRY_MSGS_QUATERNION
-
-        if hasattr(msg_, 'x') and hasattr(msg_.pose, 'y') and hasattr(msg_, 'z'):
-            return ROSMessageType.GEOMETRY_MSGS_VECTOR3
-
-    return ROSMessageType.NOT_SUPPORTED
-
-
-def message_to_tum(msg_, t_, msg_type=ROSMessageType.NOT_SUPPORTED):
-    """
-
-    :rtype: list of floats
-    """
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED:
-        return ["%f" % msg_.header.stamp.to_sec(), str(msg_.point.x), str(msg_.point.y), str(msg_.point.z), "0", "0",
-                "0", "1"]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_VECTOR3:
-        t = float(t_.secs) + float(t_.nsecs) * 1e-9
-        return ["%f" % str(t), str(msg_.x), str(msg_.y), str(msg_.z), "0", "0", "0", "1"]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED:
-        return ["%f" % msg_.header.stamp.to_sec(), str(msg_.vector.x), str(msg_.vector.y),
-                str(msg_.vector.z), "0", "0", "0", "1"]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
-        return ["%f" % msg_.header.stamp.to_sec(), str(msg_.pose.pose.position.x), str(msg_.pose.pose.position.y),
-                str(msg_.pose.pose.position.z), str(msg_.pose.pose.orientation.x),
-                str(msg_.pose.pose.orientation.y), str(msg_.pose.pose.orientation.z),
-                str(msg_.pose.pose.orientation.w)]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
-        t = float(t_.secs) + float(t_.nsecs) * 1e-9
-        return ["%f" % str(t), str(msg_.pose.position.x), str(msg_.pose.position.y),
-                str(msg_.pose.position.z), str(msg_.pose.orientation.x),
-                str(msg_.pose.orientation.y), str(msg_.pose.orientation.z),
-                str(msg_.pose.orientation.w)]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_POSESTAMPED:
-        return ["%f" % msg_.header.stamp.to_sec(), str(msg_.pose.position.x), str(msg_.pose.position.y),
-                str(msg_.pose.position.z), str(msg_.pose.orientation.x), str(msg_.pose.orientation.y),
-                str(msg_.pose.orientation.z), str(msg_.pose.orientation.w)]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_POSE:
-        t = float(t_.secs) + float(t_.nsecs) * 1e-9
-        return ["%f" % str(t), str(msg_.position.x), str(msg_.position.y),
-                str(msg_.position.z), str(msg_.orientation.x), str(msg_.orientation.y),
-                str(msg_.orientation.z), str(msg_.orientation.w)]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_QUATERNION:
-        t = float(t_.secs) + float(t_.nsecs) * 1e-9
-        return ["%f" % str(t), "0", "0", "0", str(msg_.x), str(msg_.y), str(msg_.z), str(msg_.w)]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED:
-        return ["%f" % msg_.header.stamp.to_sec(), "0", "0", "0", str(msg_.pose.quaternion.x),
-                str(msg_.pose.quaternion.y), str(msg_.pose.quaternion.z), str(msg_.pose.quaternion.w)]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_TRANSFORM:
-        t = float(t_.secs) + float(t_.nsecs) * 1e-9
-        return ["%f" % str(t), str(msg_.translation.x), str(msg_.translation.y),
-                str(msg_.translation.z), str(msg_.rotation.x), str(msg_.rotation.y),
-                str(msg_.rotation.z), str(msg_.rotation.w)]
-
-    if msg_type == ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED:
-        if msg_type == ROSMessageType.GEOMETRY_MSGS_POSESTAMPED:
-            return ["%f" % msg_.header.stamp.to_sec(), str(msg_.transform.translation.x),
-                    str(msg_.transform.translation.y),
-                    str(msg_.transform.translation.z), str(msg_.transform.rotation.x), str(msg_.transform.rotation.y),
-                    str(msg_.transform.rotation.z), str(msg_.transform.rotation.w)]
-
-    # else:
-    return []
 
 
 class Rosbag2Csv:
@@ -241,7 +108,7 @@ class Rosbag2Csv:
 
         for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
             if topic in args.topics:
-                message_type = get_message_type(msg)
+                message_type = ROSMessageType.get_message_type(msg)
                 if message_type != ROSMessageType.NOT_SUPPORTED:
                     file_writer = topic_filewriter[topic]
 
@@ -251,8 +118,8 @@ class Rosbag2Csv:
 
                     # TODO: add more message_to_xxx options
                     content = None
-                    if format == CSVformat.TUM:
-                        content = message_to_tum(msg, t, message_type)
+                    if format == CSVFormat.TUM:
+                        content = CSVFormat.message_to_tum(msg, t, message_type)
                     else:
                         print ("ROSMsg2CSV: unsupported format: %s " % str(format))
                         return False
@@ -273,7 +140,7 @@ if __name__ == "__main__":
     parser.add_argument('--result_dir', help='directory to store results [otherwise bagfile name will be a directory]',
                         default='')
     parser.add_argument('--verbose', action='store_true', default=False)
-    parser.add_argument('--format', type=CSVformat, help='CSV format', choices=list(CSVformat), default=CSVformat.TUM)
+    parser.add_argument('--format', type=CSVFormat, help='CSV format', choices=list(CSVFormat), default=CSVFormat.TUM)
 
     tp_start = time.time()
     args = parser.parse_args()
