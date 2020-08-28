@@ -42,7 +42,7 @@ class Rosbag2Csv:
     @staticmethod
     def extract(bagfile_name, topic_list, result_dir="", fn_list=[], verbose=False, format='TUM'):
         if not os.path.isfile(bagfile_name):
-            print("ROSMsg2CSV: could not find file %s" % bagfile_name)
+            print("ROSMsg2CSV: could not find file: %s" % bagfile_name)
             return False
 
         if len(topic_list) < 1:
@@ -56,8 +56,10 @@ class Rosbag2Csv:
 
         if verbose:
             print("ROSMsg2CSV:")
-            print("* bagfile name: \t" + str(bagfile_name))
-            print("* topic_list: \t" + str(topic_list))
+            print("* bagfile name: " + str(bagfile_name))
+            print("* topic_list: \t " + str(topic_list))
+            print("* filename_list: " + str(fn_list))
+            print("* CSV format: \t " + str(format))
 
         if result_dir == "":
             folder = string.rstrip(bagfile_name, ".bag")
@@ -71,7 +73,7 @@ class Rosbag2Csv:
             pass
 
         if verbose:
-            print("* result_dir: \t" + str(folder))
+            print("* result_dir: \t " + str(folder))
 
         topic_filewriter = dict()
         topic_headerwritten = dict()
@@ -86,7 +88,13 @@ class Rosbag2Csv:
             if not fn_list:
                 filename = str(folder + '/') + string.replace(topicName[1:], '/', '_') + '.csv'
             else:
-                filename = fn_list[idx]
+                fn = fn_list[idx]
+                [root, ext] = os.path.splitext(fn)
+                [head, tail] = os.path.split(root)
+                if ext:
+                    filename = str(folder + '/') + tail + ext
+                else:
+                    filename = str(folder + '/') + tail + '.csv'
 
             csvfile = open(filename, 'w+')
             filewriter = csv.writer(csvfile, delimiter=',', lineterminator='\n')
@@ -104,7 +112,7 @@ class Rosbag2Csv:
         num_messages = info_dict['messages']
 
         if verbose:
-            print("ROSMsg2CSV: num messages " + str(num_messages))
+            print("\nROSMsg2CSV: num messages " + str(num_messages))
 
         for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
             if topic in args.topics:
@@ -120,6 +128,8 @@ class Rosbag2Csv:
                     content = None
                     if format == CSVFormat.TUM:
                         content = CSVFormat.message_to_tum(msg, t, message_type)
+                    elif format == CSVFormat.TUM_short:
+                        content = CSVFormat.message_to_tum_short(msg, t, message_type)
                     else:
                         print ("ROSMsg2CSV: unsupported format: %s " % str(format))
                         return False
