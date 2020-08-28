@@ -1,7 +1,7 @@
 from enum import Enum
 from ROSMessageType import ROSMessageType
 
-from tum_eval.tum_csv_header import tum_csv_header
+from tum_eval.TUMCSVheader import TUMCSVheader
 
 
 class CSVFormat(Enum):
@@ -15,7 +15,9 @@ class CSVFormat(Enum):
     @staticmethod
     def get_header(format):
         if format == 'TUM':
-            return tum_csv_header.default()
+            return TUMCSVheader.default()
+        elif format == 'TUM_short':
+            return TUMCSVheader.pos_stamped()
         else:
             return "# no header "
 

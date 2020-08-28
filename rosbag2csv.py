@@ -32,7 +32,7 @@ from CSVFormat import CSVFormat
 from ROSMessageType import ROSMessageType
 
 from script_utils.utils import *
-from tum_eval.tum_csv_header import tum_csv_header
+from tum_eval.TUMCSVheader import TUMCSVheader
 
 
 class Rosbag2Csv:
@@ -121,7 +121,7 @@ class Rosbag2Csv:
                     file_writer = topic_filewriter[topic]
 
                     if not topic_headerwritten[topic]:
-                        file_writer.writerow(tum_csv_header.pose_stamped())
+                        file_writer.writerow(TUMCSVheader.pose_stamped())
                         topic_headerwritten[topic] = True
 
                     # TODO: add more message_to_xxx options
