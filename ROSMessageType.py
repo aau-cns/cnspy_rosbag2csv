@@ -52,10 +52,10 @@ class ROSMessageType(Enum):
             if hasattr(msg_, 'translation') and hasattr(msg_, 'rotation'):
                 return ROSMessageType.GEOMETRY_MSGS_TRANSFORM
 
-            if hasattr(msg_, 'x') and hasattr(msg_.pose, 'y') and hasattr(msg_, 'z') and hasattr(msg_, 'w'):
+            if hasattr(msg_, 'x') and hasattr(msg_, 'y') and hasattr(msg_, 'z') and hasattr(msg_, 'w'):
                 return ROSMessageType.GEOMETRY_MSGS_QUATERNION
 
-            if hasattr(msg_, 'x') and hasattr(msg_.pose, 'y') and hasattr(msg_, 'z'):
+            if hasattr(msg_, 'x') and hasattr(msg_, 'y') and hasattr(msg_, 'z'):
                 return ROSMessageType.GEOMETRY_MSGS_VECTOR3
 
         return ROSMessageType.NOT_SUPPORTED
