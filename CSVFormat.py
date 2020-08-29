@@ -7,6 +7,7 @@ from tum_eval.TUMCSVheader import TUMCSVheader
 class CSVFormat(Enum):
     TUM = 'TUM'
     TUM_short = 'TUM_short'
+    PoseCov = 'PoseCov'
     none = 'none'
 
     def __str__(self):
@@ -14,10 +15,12 @@ class CSVFormat(Enum):
 
     @staticmethod
     def get_header(format):
-        if format == 'TUM':
+        if str(format) == 'TUM':
             return TUMCSVheader.default()
-        elif format == 'TUM_short':
+        elif str(format) == 'TUM_short':
             return TUMCSVheader.pos_stamped()
+        elif str(format) == 'PoseCov':
+            return ['# t', 'pxx', 'pxy', 'pxz', 'pyy', 'pyz', 'pzz', 'qrr', 'qrp', 'qry', 'qpp', 'qpy', 'qyy']
         else:
             return "# no header "
 
@@ -86,7 +89,7 @@ class CSVFormat(Enum):
                     str(msg_.transform.rotation.y),
                     str(msg_.transform.rotation.z), str(msg_.transform.rotation.w)]
         # else:
-        return []
+        return None
 
     @staticmethod
     def message_to_tum_short(msg_, t_, msg_type=ROSMessageType.NOT_SUPPORTED):
@@ -141,79 +144,126 @@ class CSVFormat(Enum):
                     str(msg_.transform.translation.y),
                     str(msg_.transform.translation.z)]
         # else:
-        return []
+        return None
+
+    @staticmethod
+    def msg_to_PoseCov(msg_, t_, msg_type=ROSMessageType.NOT_SUPPORTED):
+
+        if msg_type == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
+            if msg_type == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
+                P = msg_.pose.covariance
+                t = msg_.header.stamp.to_sec()
+            else:
+                P = msg_.covariance
+                t = float(t_.secs) + float(t_.nsecs) * 1e-9
+
+        return ["%f" % (t), P[0], P[1], P[2], P[7], P[8], P[15], P[21], P[22], P[23], P[28], P[29], P[35]]
+
+        # else:
+        return None
+
+
+########################################################################################################################
+#################################################### T E S T ###########################################################
+########################################################################################################################
+import unittest
+import rospy
+from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
+from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
+from geometry_msgs.msg import Quaternion, QuaternionStamped, Transform, TransformStamped
+
+
+class Time:
+    nsecs = 0
+    secs = 0
+
+    def __repr__(self):
+        return "{0}.{1}])".format(self.secs, self.nsecs)
+
+
+class CSVFormat_Test(unittest.TestCase):
+    def test_get_message_type(self):
+        self.assertTrue(ROSMessageType.get_message_type(Point()) == ROSMessageType.GEOMETRY_MSGS_VECTOR3)
+        self.assertTrue(ROSMessageType.get_message_type(PointStamped()) == ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED)
+        self.assertTrue(ROSMessageType.get_message_type(Vector3()) == ROSMessageType.GEOMETRY_MSGS_VECTOR3)
+        self.assertTrue(
+            ROSMessageType.get_message_type(Vector3Stamped()) == ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED)
+        self.assertTrue(ROSMessageType.get_message_type(
+            PoseWithCovarianceStamped()) == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
+        self.assertTrue(ROSMessageType.get_message_type(
+            PoseWithCovariance()) == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
+        self.assertTrue(ROSMessageType.get_message_type(PoseStamped()) == ROSMessageType.GEOMETRY_MSGS_POSESTAMPED)
+        self.assertTrue(ROSMessageType.get_message_type(Pose()) == ROSMessageType.GEOMETRY_MSGS_POSE)
+        self.assertTrue(ROSMessageType.get_message_type(Quaternion()) == ROSMessageType.GEOMETRY_MSGS_QUATERNION)
+        self.assertTrue(
+            ROSMessageType.get_message_type(QuaternionStamped()) == ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED)
+        self.assertTrue(ROSMessageType.get_message_type(Transform()) == ROSMessageType.GEOMETRY_MSGS_TRANSFORM)
+        self.assertTrue(
+            ROSMessageType.get_message_type(TransformStamped()) == ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED)
+
+    def check_tumline(self, line):
+        self.assertTrue(len(line) == 8)
+        self.assertTrue(int(float(line[7])) == 1 or int(float(line[7])) == 0)
+        self.assertTrue(int(float(line[0])) == 0)
+        self.assertTrue(int(float(line[1])) == 0)
+        self.assertTrue(int(float(line[2])) == 0)
+        self.assertTrue(int(float(line[3])) == 0)
+        self.assertTrue(int(float(line[4])) == 0)
+
+    def test_MESSAGE_TO_TUM(self):
+        t = Time()
+        t.secs = 0
+
+        self.check_tumline(CSVFormat.message_to_tum(Point(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3))
+        self.check_tumline(CSVFormat.message_to_tum(PointStamped(), t, ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED))
+        self.check_tumline(CSVFormat.message_to_tum(Vector3(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3))
+        self.check_tumline(CSVFormat.message_to_tum(Vector3Stamped(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED))
+        self.check_tumline(CSVFormat.message_to_tum(PoseWithCovarianceStamped(), t,
+                                                    ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED))
+        self.check_tumline(
+            CSVFormat.message_to_tum(PoseWithCovariance(), t, ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE))
+        self.check_tumline(CSVFormat.message_to_tum(PoseStamped(), t, ROSMessageType.GEOMETRY_MSGS_POSESTAMPED))
+        self.check_tumline(CSVFormat.message_to_tum(Pose(), t, ROSMessageType.GEOMETRY_MSGS_POSE))
+        self.check_tumline(CSVFormat.message_to_tum(Quaternion(), t, ROSMessageType.GEOMETRY_MSGS_QUATERNION))
+        self.check_tumline(
+            CSVFormat.message_to_tum(QuaternionStamped(), t, ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED))
+        self.check_tumline(CSVFormat.message_to_tum(Transform(), t, ROSMessageType.GEOMETRY_MSGS_TRANSFORM))
+        self.check_tumline(
+            CSVFormat.message_to_tum(TransformStamped(), t, ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED))
+
+    def test_MESSAGE_TO_TUM_SHORT(self):
+        t = Time()
+        t.secs = 0
+
+        # MESSAGE_TO_TUM_SHORT
+        line = CSVFormat.message_to_tum_short(Point(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3)
+        line = CSVFormat.message_to_tum_short(PointStamped(), t, ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED)
+        line = CSVFormat.message_to_tum_short(Vector3(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3)
+        line = CSVFormat.message_to_tum_short(Vector3Stamped(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED)
+        line = CSVFormat.message_to_tum_short(PoseWithCovarianceStamped(), t,
+                                              ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
+        line = CSVFormat.message_to_tum_short(PoseWithCovariance(), t, ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
+        line = CSVFormat.message_to_tum_short(PoseStamped(), t, ROSMessageType.GEOMETRY_MSGS_POSESTAMPED)
+        line = CSVFormat.message_to_tum_short(Pose(), t, ROSMessageType.GEOMETRY_MSGS_POSE)
+        line = CSVFormat.message_to_tum_short(Quaternion(), t, ROSMessageType.GEOMETRY_MSGS_QUATERNION)
+        line = CSVFormat.message_to_tum_short(QuaternionStamped(), t, ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED)
+        line = CSVFormat.message_to_tum_short(Transform(), t, ROSMessageType.GEOMETRY_MSGS_TRANSFORM)
+        line = CSVFormat.message_to_tum_short(TransformStamped(), t, ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED)
+
+    def test_MESSAGE_TO_PoseCov(self):
+        t = Time()
+        t.secs = 0
+        pose_cov = PoseWithCovarianceStamped()
+        pose_cov.pose.covariance = range(0, 36, 1)
+        line = CSVFormat.msg_to_PoseCov(pose_cov, t, ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
+        print('line1:' + str(line))
+
+        pose_cov = PoseWithCovariance()
+        pose_cov.covariance = range(0, 36, 1)
+        line = CSVFormat.msg_to_PoseCov(pose_cov, t, ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
+        print('line2:' + str(line))
 
 
 if __name__ == "__main__":
+    unittest.main()
     print("testing supported ROS msgs types")
-    import rospy
-    from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
-    from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
-    from geometry_msgs.msg import Quaternion, QuaternionStamped, Transform, TransformStamped
-
-    assert (ROSMessageType.get_message_type(Point()) == ROSMessageType.GEOMETRY_MSGS_VECTOR3)
-    assert (ROSMessageType.get_message_type(PointStamped()) == ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED)
-    assert (ROSMessageType.get_message_type(Vector3()) == ROSMessageType.GEOMETRY_MSGS_VECTOR3)
-    assert (ROSMessageType.get_message_type(Vector3Stamped()) == ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED)
-    assert (ROSMessageType.get_message_type(
-        PoseWithCovarianceStamped()) == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
-    assert (ROSMessageType.get_message_type(PoseWithCovariance()) == ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
-    assert (ROSMessageType.get_message_type(PoseStamped()) == ROSMessageType.GEOMETRY_MSGS_POSESTAMPED)
-    assert (ROSMessageType.get_message_type(Pose()) == ROSMessageType.GEOMETRY_MSGS_POSE)
-    assert (ROSMessageType.get_message_type(Quaternion()) == ROSMessageType.GEOMETRY_MSGS_QUATERNION)
-    assert (ROSMessageType.get_message_type(QuaternionStamped()) == ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED)
-    assert (ROSMessageType.get_message_type(Transform()) == ROSMessageType.GEOMETRY_MSGS_TRANSFORM)
-    assert (ROSMessageType.get_message_type(TransformStamped()) == ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED)
-
-
-    class Time:
-        nsecs = 0
-        secs = 0
-
-        def __repr__(self):
-            return "{0}.{1}])".format(self.secs, self.nsecs)
-
-
-    t = Time()
-    t.secs = 0
-
-
-    def check_tumline(line):
-        assert len(line) == 8
-        assert int(float(line[7])) == 1 or int(float(line[7])) == 0
-        assert int(float(line[0])) == 0
-        assert int(float(line[1])) == 0
-        assert int(float(line[2])) == 0
-        assert int(float(line[3])) == 0
-        assert int(float(line[4])) == 0
-
-
-    # MESSAGE_TO_TUM
-    check_tumline(CSVFormat.message_to_tum(Point(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3))
-    check_tumline(CSVFormat.message_to_tum(PointStamped(), t, ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED))
-    check_tumline(CSVFormat.message_to_tum(Vector3(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3))
-    check_tumline(CSVFormat.message_to_tum(Vector3Stamped(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED))
-    check_tumline(CSVFormat.message_to_tum(PoseWithCovarianceStamped(), t,
-                                           ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED))
-    check_tumline(CSVFormat.message_to_tum(PoseWithCovariance(), t, ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE))
-    check_tumline(CSVFormat.message_to_tum(PoseStamped(), t, ROSMessageType.GEOMETRY_MSGS_POSESTAMPED))
-    check_tumline(CSVFormat.message_to_tum(Pose(), t, ROSMessageType.GEOMETRY_MSGS_POSE))
-    check_tumline(CSVFormat.message_to_tum(Quaternion(), t, ROSMessageType.GEOMETRY_MSGS_QUATERNION))
-    check_tumline(CSVFormat.message_to_tum(QuaternionStamped(), t, ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED))
-    check_tumline(CSVFormat.message_to_tum(Transform(), t, ROSMessageType.GEOMETRY_MSGS_TRANSFORM))
-    check_tumline(CSVFormat.message_to_tum(TransformStamped(), t, ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED))
-
-    # MESSAGE_TO_TUM_SHORT
-    line = CSVFormat.message_to_tum_short(Point(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3)
-    line = CSVFormat.message_to_tum_short(PointStamped(), t, ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED)
-    line = CSVFormat.message_to_tum_short(Vector3(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3)
-    line = CSVFormat.message_to_tum_short(Vector3Stamped(), t, ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED)
-    line = CSVFormat.message_to_tum_short(PoseWithCovarianceStamped(), t,
-                                          ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
-    line = CSVFormat.message_to_tum_short(PoseWithCovariance(), t, ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
-    line = CSVFormat.message_to_tum_short(PoseStamped(), t, ROSMessageType.GEOMETRY_MSGS_POSESTAMPED)
-    line = CSVFormat.message_to_tum_short(Pose(), t, ROSMessageType.GEOMETRY_MSGS_POSE)
-    line = CSVFormat.message_to_tum_short(Quaternion(), t, ROSMessageType.GEOMETRY_MSGS_QUATERNION)
-    line = CSVFormat.message_to_tum_short(QuaternionStamped(), t, ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED)
-    line = CSVFormat.message_to_tum_short(Transform(), t, ROSMessageType.GEOMETRY_MSGS_TRANSFORM)
-    line = CSVFormat.message_to_tum_short(TransformStamped(), t, ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED)

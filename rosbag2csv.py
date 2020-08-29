@@ -121,7 +121,7 @@ class Rosbag2Csv:
                     file_writer = topic_filewriter[topic]
 
                     if not topic_headerwritten[topic]:
-                        file_writer.writerow(TUMCSVheader.pose_stamped())
+                        file_writer.writerow(CSVFormat.get_header(format))
                         topic_headerwritten[topic] = True
 
                     # TODO: add more message_to_xxx options
@@ -130,11 +130,14 @@ class Rosbag2Csv:
                         content = CSVFormat.message_to_tum(msg, t, message_type)
                     elif format == CSVFormat.TUM_short:
                         content = CSVFormat.message_to_tum_short(msg, t, message_type)
+                    elif format == CSVFormat.PoseCov:
+                        content = CSVFormat.msg_to_PoseCov(msg, t, message_type)
                     else:
                         print ("ROSMsg2CSV: unsupported format: %s " % str(format))
                         return False
 
-                    file_writer.writerow(content)
+                    if content is not None:
+                        file_writer.writerow(content)
 
         if verbose:
             print("\nROSMsg2CSV: extracting done! ")
@@ -142,6 +145,8 @@ class Rosbag2Csv:
 
 
 if __name__ == "__main__":
+    # test1: --bagfile ./test/example.bag --topics /uwb_trilateration/tagDistance_raw /pose_sensor/pose /fcu/current_pose --verbose  --filenames uwb /rasdf/body_pose imu_pose.csv
+    # test2: --bagfile ./test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseCov.csv sensor_PoseCov.csv --format PoseCov
     parser = argparse.ArgumentParser(
         description='Rosbag2Csv: extract and store given topics of a rosbag into a CSV file')
     parser.add_argument('--bagfile', help='input bag file', default="not specified")
