@@ -135,8 +135,10 @@ class ROSbag2CSV:
 
 
 if __name__ == "__main__":
-    # test1: --bagfile ./test/example.bag --topics /uwb_trilateration/tagDistance_raw /pose_sensor/pose /fcu/current_pose --verbose  --filenames uwb /rasdf/body_pose imu_pose.csv
-    # test2: --bagfile ./test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseCov.csv sensor_PoseCov.csv --format PoseCov
+    # test1: --bagfile ../test/example.bag --topics /uwb_trilateration/tagDistance_raw /pose_sensor/pose /fcu/current_pose --verbose  --filenames uwb /rasdf/body_pose imu_pose.csv
+    # test2: --bagfile ../test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseCov.csv sensor_PoseCov.csv --format PoseCov
+    # test3: --bagfile ../test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseWithCov.csv sensor_PoseWithCov.csv --format PoseWithCov
+
     parser = argparse.ArgumentParser(
         description='ROSbag2CSV: extract and store given topics of a rosbag into a CSV file')
     parser.add_argument('--bagfile', help='input bag file', default="not specified")

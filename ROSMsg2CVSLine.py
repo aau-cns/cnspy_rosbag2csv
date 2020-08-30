@@ -153,7 +153,9 @@ class ROSMsg2CSVLine:
                 t = float(t_.secs) + float(t_.nsecs) * 1e-9
 
             return ["%f" % (t), P[0], P[1], P[2], P[7], P[8], P[15], P[21], P[22], P[23], P[28], P[29], P[35]]
-
+        elif msg_type != ROSMessageTypes.NOT_SUPPORTED:
+            t = float(t_.secs) + float(t_.nsecs) * 1e-9
+            return [str(t), '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
         # else:
         return None
 
@@ -286,6 +288,7 @@ class ROSMsg2CSVLine_Test(unittest.TestCase):
         print('line2:' + str(line))
         self.assertTrue(len(line) == 13)
         line = self.get_lines(CSVFormat.PoseCov)
+        self.assertTrue(len(line) == 13)
 
     def test_MESSAGE_TO_PoseWithCov(self):
         line = self.get_lines(CSVFormat.PoseWithCov)
