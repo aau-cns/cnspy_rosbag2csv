@@ -18,7 +18,6 @@
 # Requirements:
 # sudo pip install PyYAML  rospkg catkin_pkg enum tqdm
 
-import sys
 import rosbag
 import time
 import string
@@ -29,7 +28,7 @@ import csv
 from tqdm import tqdm
 
 from ROSMsg2CVSLine import ROSMsg2CSVLine
-from CSVFormat import CSVFormat
+from ros_csv_formats.CSVFormat import CSVFormat
 from ROSMessageTypes import ROSMessageTypes
 
 from script_utils.utils import *
