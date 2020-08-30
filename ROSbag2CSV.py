@@ -123,17 +123,8 @@ class ROSbag2CSV:
                         file_writer.writerow(CSVFormat.get_header(format))
                         topic_headerwritten[topic] = True
 
-                    # TODO: add more message_to_xxx options
-                    content = None
-                    if format == CSVFormat.TUM:
-                        content = ROSMsg2CSVLine.to_TUM(msg, t, message_type)
-                    elif format == CSVFormat.TUM_short:
-                        content = ROSMsg2CSVLine.to_TUM_short(msg, t, message_type)
-                    elif format == CSVFormat.PoseCov:
-                        content = ROSMsg2CSVLine.to_PoseCov(msg, t, message_type)
-                    else:
-                        print ("CSVFormat: unsupported format: %s " % str(format))
-                        return False
+                    # TODO: all conversions are done in ROSMsg2CSVLine
+                    content = ROSMsg2CSVLine.to(format, msg, t, message_type)
 
                     if content is not None:
                         file_writer.writerow(content)
