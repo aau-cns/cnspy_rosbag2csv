@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ROSMessageType(Enum):
+class ROSMessageTypes(Enum):
     NOT_SUPPORTED = 0
     # GEOMETRY_MSGS_POINT = 3 == VECTOR3
     GEOMETRY_MSGS_POINTSTAMPED = 1  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PointStamped.html
@@ -20,42 +20,42 @@ class ROSMessageType(Enum):
     def get_message_type(msg_):
         """
 
-        :rtype: ROSMessageType
+        :rtype: ROSMessageTypes
         """
 
         if hasattr(msg_, 'header'):  # STAMPED
             if hasattr(msg_, 'pose') and hasattr(msg_.pose, 'covariance') and hasattr(msg_.pose, 'pose'):
-                return ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED
+                return ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED
 
             if hasattr(msg_, 'pose') and hasattr(msg_.pose, 'position'):
-                return ROSMessageType.GEOMETRY_MSGS_POSESTAMPED
+                return ROSMessageTypes.GEOMETRY_MSGS_POSESTAMPED
 
             if hasattr(msg_, 'point'):
-                return ROSMessageType.GEOMETRY_MSGS_POINTSTAMPED
+                return ROSMessageTypes.GEOMETRY_MSGS_POINTSTAMPED
 
             if hasattr(msg_, 'vector'):
-                return ROSMessageType.GEOMETRY_MSGS_VECTOR3STAMPED
+                return ROSMessageTypes.GEOMETRY_MSGS_VECTOR3STAMPED
 
             if hasattr(msg_, 'transform'):
-                return ROSMessageType.GEOMETRY_MSGS_TRANSFORMSTAMPED
+                return ROSMessageTypes.GEOMETRY_MSGS_TRANSFORMSTAMPED
 
             if hasattr(msg_, 'quaternion'):
-                return ROSMessageType.GEOMETRY_MSGS_QUATERNIONSTAMPED
+                return ROSMessageTypes.GEOMETRY_MSGS_QUATERNIONSTAMPED
 
         else:  # NOT STAMPED
             if hasattr(msg_, 'pose') and hasattr(msg_, 'covariance'):
-                return ROSMessageType.GEOMETRY_MSGS_POSEWITHCOVARIANCE
+                return ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE
 
             if hasattr(msg_, 'position') and hasattr(msg_, 'orientation'):
-                return ROSMessageType.GEOMETRY_MSGS_POSE
+                return ROSMessageTypes.GEOMETRY_MSGS_POSE
 
             if hasattr(msg_, 'translation') and hasattr(msg_, 'rotation'):
-                return ROSMessageType.GEOMETRY_MSGS_TRANSFORM
+                return ROSMessageTypes.GEOMETRY_MSGS_TRANSFORM
 
             if hasattr(msg_, 'x') and hasattr(msg_, 'y') and hasattr(msg_, 'z') and hasattr(msg_, 'w'):
-                return ROSMessageType.GEOMETRY_MSGS_QUATERNION
+                return ROSMessageTypes.GEOMETRY_MSGS_QUATERNION
 
             if hasattr(msg_, 'x') and hasattr(msg_, 'y') and hasattr(msg_, 'z'):
-                return ROSMessageType.GEOMETRY_MSGS_VECTOR3
+                return ROSMessageTypes.GEOMETRY_MSGS_VECTOR3
 
-        return ROSMessageType.NOT_SUPPORTED
+        return ROSMessageTypes.NOT_SUPPORTED

@@ -28,34 +28,34 @@ import yaml
 import csv
 from tqdm import tqdm
 
+from ROSMsg2CVSLine import ROSMsg2CSVLine
 from CSVFormat import CSVFormat
-from ROSMessageType import ROSMessageType
+from ROSMessageTypes import ROSMessageTypes
 
 from script_utils.utils import *
-from tum_eval.TUMCSVheader import TUMCSVheader
 
 
-class Rosbag2Csv:
+class ROSbag2CSV:
     def __init__(self, ):
         pass
 
     @staticmethod
     def extract(bagfile_name, topic_list, result_dir="", fn_list=[], verbose=False, format='TUM'):
         if not os.path.isfile(bagfile_name):
-            print("ROSMsg2CSV: could not find file: %s" % bagfile_name)
+            print("ROSbag2CSV: could not find file: %s" % bagfile_name)
             return False
 
         if len(topic_list) < 1:
-            print("ROSMsg2CSV: no topics specified!")
+            print("ROSbag2CSV: no topics specified!")
             return False
 
         if fn_list:
             if len(topic_list) != len(fn_list):
-                print("ROSMsg2CSV: topic_list and fn_list must have the same length!")
+                print("ROSbag2CSV: topic_list and fn_list must have the same length!")
                 return False
 
         if verbose:
-            print("ROSMsg2CSV:")
+            print("ROSbag2CSV:")
             print("* bagfile name: " + str(bagfile_name))
             print("* topic_list: \t " + str(topic_list))
             print("* filename_list: " + str(fn_list))
@@ -82,7 +82,7 @@ class Rosbag2Csv:
         for topicName in topic_list:
 
             if topicName[0] != '/':
-                print ("ROSMsg2CSV: Not a propper topic name: %s (should start with /)" % topicName)
+                print ("ROSbag2CSV: Not a propper topic name: %s (should start with /)" % topicName)
                 continue
 
             if not fn_list:
@@ -102,7 +102,7 @@ class Rosbag2Csv:
             topic_headerwritten[topicName] = False
 
             if verbose:
-                print ("ROSMsg2CSV: creating csv file: %s " % filename)
+                print ("ROSbag2CSV: creating csv file: %s " % filename)
 
             idx = idx + 1
 
@@ -112,12 +112,12 @@ class Rosbag2Csv:
         num_messages = info_dict['messages']
 
         if verbose:
-            print("\nROSMsg2CSV: num messages " + str(num_messages))
+            print("\nROSbag2CSV: num messages " + str(num_messages))
 
         for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
             if topic in args.topics:
-                message_type = ROSMessageType.get_message_type(msg)
-                if message_type != ROSMessageType.NOT_SUPPORTED:
+                message_type = ROSMessageTypes.get_message_type(msg)
+                if message_type != ROSMessageTypes.NOT_SUPPORTED:
                     file_writer = topic_filewriter[topic]
 
                     if not topic_headerwritten[topic]:
@@ -127,20 +127,20 @@ class Rosbag2Csv:
                     # TODO: add more message_to_xxx options
                     content = None
                     if format == CSVFormat.TUM:
-                        content = CSVFormat.message_to_tum(msg, t, message_type)
+                        content = ROSMsg2CSVLine.to_TUM(msg, t, message_type)
                     elif format == CSVFormat.TUM_short:
-                        content = CSVFormat.message_to_tum_short(msg, t, message_type)
+                        content = ROSMsg2CSVLine.to_TUM_short(msg, t, message_type)
                     elif format == CSVFormat.PoseCov:
-                        content = CSVFormat.msg_to_PoseCov(msg, t, message_type)
+                        content = ROSMsg2CSVLine.to_PoseCov(msg, t, message_type)
                     else:
-                        print ("ROSMsg2CSV: unsupported format: %s " % str(format))
+                        print ("CSVFormat: unsupported format: %s " % str(format))
                         return False
 
                     if content is not None:
                         file_writer.writerow(content)
 
         if verbose:
-            print("\nROSMsg2CSV: extracting done! ")
+            print("\nROSbag2CSV: extracting done! ")
         return True
 
 
@@ -148,19 +148,20 @@ if __name__ == "__main__":
     # test1: --bagfile ./test/example.bag --topics /uwb_trilateration/tagDistance_raw /pose_sensor/pose /fcu/current_pose --verbose  --filenames uwb /rasdf/body_pose imu_pose.csv
     # test2: --bagfile ./test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseCov.csv sensor_PoseCov.csv --format PoseCov
     parser = argparse.ArgumentParser(
-        description='Rosbag2Csv: extract and store given topics of a rosbag into a CSV file')
+        description='ROSbag2CSV: extract and store given topics of a rosbag into a CSV file')
     parser.add_argument('--bagfile', help='input bag file', default="not specified")
     parser.add_argument('--topics', nargs='*', help='desired topics', default=[])
     parser.add_argument('--filenames', nargs='*', help='csv filename of corresponding topic', default=[])
     parser.add_argument('--result_dir', help='directory to store results [otherwise bagfile name will be a directory]',
                         default='')
     parser.add_argument('--verbose', action='store_true', default=False)
-    parser.add_argument('--format', type=CSVFormat, help='CSV format', choices=list(CSVFormat), default=CSVFormat.TUM)
+    parser.add_argument('--format', type=CSVFormat, help='CSV format', choices=list(CSVFormat),
+                        default=CSVFormat.TUM)
 
     tp_start = time.time()
     args = parser.parse_args()
 
-    if Rosbag2Csv.extract(bagfile_name=args.bagfile, topic_list=args.topics,
+    if ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
                           fn_list=args.filenames, result_dir=args.result_dir,
                           verbose=args.verbose, format=args.format):
         print (" ")
