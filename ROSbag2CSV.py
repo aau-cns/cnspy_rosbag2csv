@@ -104,8 +104,13 @@ class ROSbag2CSV:
                 print ("ROSbag2CSV: creating csv file: %s " % filename)
 
             idx = idx + 1
+        try:
+            bag = rosbag.Bag(bagfile_name)
+        except:
+            if verbose:
+                print("ROSbag2CSV: Unexpected error!")
+            return False
 
-        bag = rosbag.Bag(bagfile_name)
         info_dict = yaml.load(bag._get_yaml_info())
 
         num_messages = info_dict['messages']
