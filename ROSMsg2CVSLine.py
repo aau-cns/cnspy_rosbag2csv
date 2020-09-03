@@ -175,7 +175,7 @@ class ROSMsg2CSVLine:
                 t = float(t_.secs) + float(t_.nsecs) * 1e-9
 
             return ["%f" % (t), str(p.x), str(p.y), str(p.z), str(q.x), str(q.y), str(q.z), str(q.w),
-                    P[0], P[1], P[2], P[7], P[8], P[15], P[21], P[22], P[23], P[28], P[29], P[35]]
+                    P[0], P[1], P[2], P[7], P[8], P[14], P[21], P[22], P[23], P[28], P[29], P[35]]
         elif msg_type != ROSMessageTypes.NOT_SUPPORTED:
             line = ROSMsg2CSVLine.to_TUM(msg_, t_, msg_type)
             line = line + ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
