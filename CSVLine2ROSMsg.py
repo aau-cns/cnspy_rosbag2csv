@@ -73,11 +73,11 @@ class CSVLine2ROSMsg:
             msg.transform.translation = Vector3(x=s.tx, y=s.ty, z=s.tz)
             msg.transform.rotation = Quaternion(x=s.qx, y=s.qy, z=s.qz, w=s.qw)
         # else:
-        return msg
+        return msg, s.t
 
     @staticmethod
     def from_PoseWithCov(line, line_number, msg_type):
-        msg = CSVLine2ROSMsg.from_TUM(line, line_number, msg_type=msg_type)
+        msg, t = CSVLine2ROSMsg.from_TUM(line, line_number, msg_type=msg_type)
         if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
             # TODO: inefficient as line is parsed twice!
             s = CSVFormat.parse(line, CSVFormat.PoseWithCov)
@@ -106,7 +106,7 @@ class CSVLine2ROSMsg:
                 msg.covariance = P
 
         # else:
-        return msg
+        return msg, t
 
 
 ########################################################################################################################

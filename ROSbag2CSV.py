@@ -35,7 +35,7 @@ from script_utils.utils import *
 
 
 class ROSbag2CSV:
-    def __init__(self, ):
+    def __init__(self):
         pass
 
     @staticmethod
