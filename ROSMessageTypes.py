@@ -2,19 +2,22 @@ from enum import Enum
 
 
 class ROSMessageTypes(Enum):
-    NOT_SUPPORTED = 0
+    NOT_SUPPORTED = 'NOT_SUPPORTED'
     # GEOMETRY_MSGS_POINT = 3 == VECTOR3
-    GEOMETRY_MSGS_POINTSTAMPED = 1  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PointStamped.html
-    GEOMETRY_MSGS_VECTOR3 = 2  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Vector3.html
-    GEOMETRY_MSGS_VECTOR3STAMPED = 3  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Vector3Stamped.html
-    GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED = 4  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseWithCovarianceStamped.html
-    GEOMETRY_MSGS_POSEWITHCOVARIANCE = 5  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseWithCovariance.html
-    GEOMETRY_MSGS_POSESTAMPED = 6  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseStamped.html
-    GEOMETRY_MSGS_POSE = 7  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Pose.html
-    GEOMETRY_MSGS_QUATERNION = 8  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Quaternion.html
-    GEOMETRY_MSGS_QUATERNIONSTAMPED = 9  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/QuaternionStamped.html
-    GEOMETRY_MSGS_TRANSFORM = 10  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Transform.html
-    GEOMETRY_MSGS_TRANSFORMSTAMPED = 11  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/TransformStamped.html
+    GEOMETRY_MSGS_POINTSTAMPED = 'GEOMETRY_MSGS_POINTSTAMPED'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PointStamped.html
+    GEOMETRY_MSGS_VECTOR3 = 'GEOMETRY_MSGS_VECTOR3'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Vector3.html
+    GEOMETRY_MSGS_VECTOR3STAMPED = 'GEOMETRY_MSGS_VECTOR3STAMPED'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Vector3Stamped.html
+    GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED = 'GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseWithCovarianceStamped.html
+    GEOMETRY_MSGS_POSEWITHCOVARIANCE = 'GEOMETRY_MSGS_POSEWITHCOVARIANCE'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseWithCovariance.html
+    GEOMETRY_MSGS_POSESTAMPED = 'GEOMETRY_MSGS_POSESTAMPED'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseStamped.html
+    GEOMETRY_MSGS_POSE = 'GEOMETRY_MSGS_POSE'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Pose.html
+    GEOMETRY_MSGS_QUATERNION = 'GEOMETRY_MSGS_QUATERNION'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Quaternion.html
+    GEOMETRY_MSGS_QUATERNIONSTAMPED = 'GEOMETRY_MSGS_QUATERNIONSTAMPED'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/QuaternionStamped.html
+    GEOMETRY_MSGS_TRANSFORM = 'GEOMETRY_MSGS_TRANSFORM'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Transform.html
+    GEOMETRY_MSGS_TRANSFORMSTAMPED = 'GEOMETRY_MSGS_TRANSFORMSTAMPED'  # http://docs.ros.org/melodic/api/geometry_msgs/html/msg/TransformStamped.html
+
+    def __str__(self):
+        return str(self.value)
 
     @staticmethod
     def get_message_type(msg_):
