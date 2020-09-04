@@ -119,7 +119,7 @@ class ROSbag2CSV:
             print("\nROSbag2CSV: num messages " + str(num_messages))
 
         for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
-            if topic in args.topics:
+            if topic in topic_list:
                 message_type = ROSMessageTypes.get_message_type(msg)
                 if message_type != ROSMessageTypes.NOT_SUPPORTED:
                     file_writer = topic_filewriter[topic]
