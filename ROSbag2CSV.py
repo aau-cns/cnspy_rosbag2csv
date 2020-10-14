@@ -81,7 +81,7 @@ class ROSbag2CSV:
         for topicName in topic_list:
 
             if topicName[0] != '/':
-                print ("ROSbag2CSV: Not a propper topic name: %s (should start with /)" % topicName)
+                print("ROSbag2CSV: Not a propper topic name: %s (should start with /)" % topicName)
                 continue
 
             if not fn_list:
@@ -101,7 +101,7 @@ class ROSbag2CSV:
             topic_headerwritten[topicName] = False
 
             if verbose:
-                print ("ROSbag2CSV: creating csv file: %s " % filename)
+                print("ROSbag2CSV: creating csv file: %s " % filename)
 
             idx = idx + 1
         try:
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     parser.add_argument('--result_dir', help='directory to store results [otherwise bagfile name will be a directory]',
                         default='')
     parser.add_argument('--verbose', action='store_true', default=False)
-    parser.add_argument('--format', type=CSVFormat, help='CSV format', choices=list(CSVFormat),
+    parser.add_argument('--format', type=CSVFormat, help='CSV format', choices=CSVFormat.list(),
                         default=CSVFormat.TUM)
 
     tp_start = time.time()
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     if ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
                           fn_list=args.filenames, result_dir=args.result_dir,
                           verbose=args.verbose, format=args.format):
-        print (" ")
+        print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
         exit_success()
     else:
