@@ -151,8 +151,7 @@ class ROSbag2CSV:
                 # print(info_dict['topics'])
                 for t in info_dict['topics']:
                     print(t['topic'])
-
-            return False
+                return False
 
         if verbose:
             print("\nROSbag2CSV: extracting done! ")
