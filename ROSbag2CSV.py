@@ -111,7 +111,7 @@ class ROSbag2CSV:
                 print("ROSbag2CSV: Unexpected error!")
             return False
 
-        info_dict = yaml.load(bag._get_yaml_info())
+        info_dict = yaml.load(bag._get_yaml_info(), Loader=yaml.FullLoader)
 
         num_messages = info_dict['messages']
         bag_topics = info_dict['topics']
