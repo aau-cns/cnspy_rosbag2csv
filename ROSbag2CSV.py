@@ -114,6 +114,15 @@ class ROSbag2CSV:
         info_dict = yaml.load(bag._get_yaml_info())
 
         num_messages = info_dict['messages']
+        bag_topics = info_dict['topics']
+        for topicName in topic_list:
+            found = False
+            for topic_info in bag_topics:
+                if topic_info['topic'] == topicName:
+                    found = True
+
+            if not found:
+                print("# WARNING: desired topic [" + str(topicName) + "] is not in bag file!")
 
         if verbose:
             print("\nROSbag2CSV: num messages " + str(num_messages))
@@ -134,6 +143,17 @@ class ROSbag2CSV:
                     if content is not None:
                         file_writer.writerow(content)
 
+        # check if a topic was found by checking if the topic header was written
+        for topicName in topic_list:
+            if not topic_headerwritten[topicName]:
+                print("\nROSbag2CSV: \n\tWARNING topic [" + str(topicName) + "] was not in bag-file")
+                print("\tbag file [" + str(bagfile_name) + "] constains: ")
+                # print(info_dict['topics'])
+                for t in info_dict['topics']:
+                    print(t['topic'])
+
+            return False
+
         if verbose:
             print("\nROSbag2CSV: extracting done! ")
         return True
@@ -152,15 +172,15 @@ if __name__ == "__main__":
     parser.add_argument('--result_dir', help='directory to store results [otherwise bagfile name will be a directory]',
                         default='')
     parser.add_argument('--verbose', action='store_true', default=False)
-    parser.add_argument('--format', type=CSVFormat, help='CSV format', choices=CSVFormat.list(),
-                        default=CSVFormat.TUM)
+    parser.add_argument('--format', help='CSV format', choices=CSVFormat.list(),
+                        default=str(CSVFormat.TUM))
 
     tp_start = time.time()
     args = parser.parse_args()
 
     if ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
                           fn_list=args.filenames, result_dir=args.result_dir,
-                          verbose=args.verbose, format=args.format):
+                          verbose=args.verbose, format=CSVFormat(args.format)):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
         exit_success()
