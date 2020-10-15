@@ -27,9 +27,9 @@ import yaml
 import csv
 from tqdm import tqdm
 
-from ROSMsg2CVSLine import ROSMsg2CSVLine
+from rosbag2csv.ROSMsg2CVSLine import ROSMsg2CSVLine
 from ros_csv_formats.CSVFormat import CSVFormat
-from ROSMessageTypes import ROSMessageTypes
+from rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
 from script_utils.utils import *
 
