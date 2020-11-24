@@ -19,7 +19,7 @@
 # Requirements:
 # enum
 ########################################################################################################################
-from ROSMessageTypes import ROSMessageTypes
+from rosbag2csv.ROSMessageTypes import ROSMessageTypes
 from ros_csv_formats.CSVFormat import CSVFormat
 
 from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
