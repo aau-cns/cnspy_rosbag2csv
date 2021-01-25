@@ -1,10 +1,36 @@
-# ROSBAG2CSV
+#  ROSBAG2CSV -- Package
 
-## CSV2ROSbag
+A package to convert different [ROS1] messages for **POSES**. Messages contained in rosbag files can be converted into CSV files in different output formats using [ROSBAG2CSV](./ROSbag2CSV.py). 
+The other way round is supported by the class [CSV2ROSbag](./CSV2ROSbag.py), taking multiple CSV files and writing them into a single bag file. 
+
+The supported ROS1 message types are defined in [ROSMessageTypes](ROSMessageTypes.py) (basically all ROS1 [geometry_msgs](http://docs.ros.org/melodic/api/geometry_msgs/html)). 
+
+
+The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle)). Just create a new [ROSMEssageType](./ROSMessageTypes.py), and make an addition to
+ * [ROSMsg2CSVLine](./ROSMsg2CSVLine.py)
+ * [CSVLine2ROSMsg](./CSVLine2ROSMsg.py) 
+ 
+ The supported CSV formats for poses are defined in the enum [CSVFormat]() of the package [ros_csv_formats](). 
+ 
+
+## Dependencies
+
+* [catkin_pkg (ROS)]()
+* [rospkg (ROS)]()
+* [rosbag (ROS)]()
+* [std_msgs (ROS)]()
+* [tqdm]()
+* [script_utils]()
+* [ros_csv_formats]()
+* [PyYAML]()
+
+
+
+## [CSV2ROSbag](./CSV2ROSbag.py)
 Convert multiple trajectory CSV files into a bag file. 
 
 ```commandline
-aaunav_data_analysis_py/rosbag2csv$ python CSV2ROSbag.py -h 
+rosbag2csv$ python CSV2ROSbag.py -h 
 usage: CSV2ROSbag.py [-h] [--bagfile_name BAGFILE_NAME]
                      [--topics [TOPICS [TOPICS ...]]]
                      [--filenames [FILENAMES [FILENAMES ...]]]
@@ -33,14 +59,14 @@ optional arguments:
 
 #### Example
 ```commandline
-aaunav_data_analysis_py/rosbag2csv$ python CSV2ROSbag.py --bagfile_name dummy.bag --topics /pose_est /pose_gt --filenames ../sample_data/ID1-pose-est-cov.csv ../sample_data/ID1-pose-gt.csv --fmt_list GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED GEOMETRY_MSGS_POSESTAMPED --verbose
+rosbag2csv$ python CSV2ROSbag.py --bagfile_name dummy.bag --topics /pose_est /pose_gt --filenames ../sample_data/ID1-pose-est-cov.csv ../sample_data/ID1-pose-gt.csv --fmt_list GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED GEOMETRY_MSGS_POSESTAMPED --verbose
 ```
 
-## ROSbag2CSV
+## [ROSBAG2CSV](./ROSbag2CSV.py)
 
 Convert a ROS bagfile into multipe CSV files. 
 ```commandline
-aaunav_data_analysis_py/rosbag2csv$ python ROSbag2CSV.py -h
+rosbag2csv$ python ROSbag2CSV.py -h
 usage: ROSbag2CSV.py [-h] [--bagfile BAGFILE] [--topics [TOPICS [TOPICS ...]]]
                      [--filenames [FILENAMES [FILENAMES ...]]]
                      [--result_dir RESULT_DIR] [--verbose]
@@ -66,5 +92,11 @@ optional arguments:
 #### Example
 
 ```commandline
-aaunav_data_analysis_py/rosbag2csv$ python ROSbag2CSV.py --bagfile ../sample_data/dummy.bag --topics /pose_est /pose_gt --verbose --filename ../sample_data/NEW-ID1-pose-est-cov.csv ../sample_data/NEW-ID1-pose-gt.csv --format PoseWithCov
+rosbag2csv$ python ROSbag2CSV.py --bagfile ../sample_data/dummy.bag --topics /pose_est /pose_gt --verbose --filename ../sample_data/NEW-ID1-pose-est-cov.csv ../sample_data/NEW-ID1-pose-gt.csv --format PoseWithCov
 ```
+
+## License
+
+Software License Agreement (GNU GPLv3  License), refer to the LICENSE file.
+
+*Sharing is caring!* - [Roland Jung](https://github.com/jungr-ait)  
