@@ -179,7 +179,7 @@ if __name__ == "__main__":
     # unittest.main()
     # exit_success()
 
-    # --bagfile_name dummy.bag --topics /pose_est /pose_gt --filenames ../sample_data/ID1-pose-est-cov.csv ../sample_data/ID1-pose-gt.csv --fmt_list GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED GEOMETRY_MSGS_POSESTAMPED --verbose
+    # --bagfile_name dummy.bag --topics /pose_est /pose_gt --filenames ./sample_data/ID1-pose-est-cov.csv ./sample_data/ID1-pose-gt.csv --fmt_list GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED GEOMETRY_MSGS_POSESTAMPED --verbose
 
     parser = argparse.ArgumentParser(
         description='CSV2ROSbag: read CSV files and convert lines to specified ROS msg and store them into a rosbag')
