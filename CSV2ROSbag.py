@@ -29,7 +29,7 @@ import csv
 from tqdm import tqdm
 
 from rosbag2csv.CSVLine2ROSMsg import CSVLine2ROSMsg
-from spatial_csv_formats.CSVFormat import CSVFormat
+from spatial_csv_formats.CSVFormatPose import CSVFormatPose
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
 from script_utils.utils import *
@@ -46,8 +46,8 @@ class CSVParser:
     fn = None
 
     def __init__(self, fn, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED):
-        self.fmt = CSVFormat.identify_format(fn)
-        assert (self.fmt is not CSVFormat.none)
+        self.fmt = CSVFormatPose.identify_format(fn)
+        assert (self.fmt is not CSVFormatPose.none)
         self.fn = fn
         self.msg_type = msg_type
 

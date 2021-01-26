@@ -20,7 +20,7 @@
 # enum
 ########################################################################################################################
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from spatial_csv_formats.CSVFormat import CSVFormat
+from spatial_csv_formats.CSVFormatPose import CSVFormatPose
 
 
 class ROSMsg2CSVLine:
@@ -29,13 +29,13 @@ class ROSMsg2CSVLine:
 
     @staticmethod
     def to(fmt, msg, t, msg_type):
-        if fmt == CSVFormat.TUM:
+        if fmt == CSVFormatPose.TUM:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
-        elif fmt == CSVFormat.TUM_short:
+        elif fmt == CSVFormatPose.TUM_short:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
-        elif fmt == CSVFormat.PoseCov:
+        elif fmt == CSVFormatPose.PoseCov:
             return ROSMsg2CSVLine.to_PoseCov(msg, t, msg_type)
-        elif fmt == CSVFormat.PoseWithCov:
+        elif fmt == CSVFormatPose.PoseWithCov:
             return ROSMsg2CSVLine.to_PoseWithCov(msg, t, msg_type)
         else:
             return None
@@ -293,7 +293,7 @@ class ROSMsg2CSVLine_Test(unittest.TestCase):
         return line
 
     def test_MESSAGE_TO_TUM_SHORT(self):
-        line = self.get_lines(CSVFormat.TUM_short)
+        line = self.get_lines(CSVFormatPose.TUM_short)
 
     def test_MESSAGE_TO_PoseCov(self):
         t = Time()
@@ -308,11 +308,11 @@ class ROSMsg2CSVLine_Test(unittest.TestCase):
         line = ROSMsg2CSVLine.to_PoseCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
         print('line2:' + str(line))
         self.assertTrue(len(line) == 13)
-        line = self.get_lines(CSVFormat.PoseCov)
+        line = self.get_lines(CSVFormatPose.PoseCov)
         self.assertTrue(len(line) == 13)
 
     def test_MESSAGE_TO_PoseWithCov(self):
-        line = self.get_lines(CSVFormat.PoseWithCov)
+        line = self.get_lines(CSVFormatPose.PoseWithCov)
         print('line:' + str(line))
         self.assertTrue(len(line) == 20)
 

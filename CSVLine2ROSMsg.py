@@ -20,7 +20,7 @@
 # enum
 ########################################################################################################################
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from spatial_csv_formats.CSVFormat import CSVFormat
+from spatial_csv_formats.CSVFormatPose import CSVFormatPose
 
 from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
@@ -45,7 +45,7 @@ class CSVLine2ROSMsg:
     @staticmethod
     def from_TUM(line, line_number, msg_type):
         msg = None
-        s = CSVFormat.parse(line, CSVFormat.TUM)
+        s = CSVFormatPose.parse(line, CSVFormatPose.TUM)
         h = Header()
         h.stamp = h.stamp.from_sec(s.t)
         h.seq = int(line_number)
@@ -101,7 +101,7 @@ class CSVLine2ROSMsg:
         msg, t = CSVLine2ROSMsg.from_TUM(line, line_number, msg_type=msg_type)
         if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
             # TODO: inefficient as line is parsed twice!
-            s = CSVFormat.parse(line, CSVFormat.PoseWithCov)
+            s = CSVFormatPose.parse(line, CSVFormatPose.PoseWithCov)
             P = [0.] * 36
             P[0] = s.pxx
             P[1] = s.pxy

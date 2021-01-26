@@ -10,7 +10,7 @@ The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.o
  * [ROSMsg2CSVLine](./ROSMsg2CSVLine.py)
  * [CSVLine2ROSMsg](./CSVLine2ROSMsg.py) 
  
- The supported CSV formats for poses are defined in the enum [CSVFormat]() of the package [ros_csv_formats](). 
+ The supported CSV formats for poses are defined in the enum [CSVFormatPose]() of the package [ros_csv_formats](). 
  
 
 ## Dependencies

@@ -28,7 +28,7 @@ import csv
 from tqdm import tqdm
 
 from rosbag2csv.ROSMsg2CVSLine import ROSMsg2CSVLine
-from spatial_csv_formats.CSVFormat import CSVFormat
+from spatial_csv_formats.CSVFormatPose import CSVFormatPose
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
 from script_utils.utils import *
@@ -134,7 +134,7 @@ class ROSbag2CSV:
                     file_writer = topic_filewriter[topic]
 
                     if not topic_headerwritten[topic]:
-                        file_writer.writerow(CSVFormat.get_header(format))
+                        file_writer.writerow(CSVFormatPose.get_header(format))
                         topic_headerwritten[topic] = True
 
                     # TODO: all conversions are done in ROSMsg2CSVLine
@@ -171,15 +171,15 @@ if __name__ == "__main__":
     parser.add_argument('--result_dir', help='directory to store results [otherwise bagfile name will be a directory]',
                         default='')
     parser.add_argument('--verbose', action='store_true', default=False)
-    parser.add_argument('--format', help='CSV format', choices=CSVFormat.list(),
-                        default=str(CSVFormat.TUM))
+    parser.add_argument('--format', help='CSV format', choices=CSVFormatPose.list(),
+                        default=str(CSVFormatPose.TUM))
 
     tp_start = time.time()
     args = parser.parse_args()
 
     if ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
                           fn_list=args.filenames, result_dir=args.result_dir,
-                          verbose=args.verbose, format=CSVFormat(args.format)):
+                          verbose=args.verbose, format=CSVFormatPose(args.format)):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
         exit_success()
