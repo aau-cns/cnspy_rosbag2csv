@@ -31,7 +31,7 @@ class ROSMsg2CSVLine:
     def to(fmt, msg, t, msg_type):
         if fmt == CSVFormatPose.TUM:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
-        elif fmt == CSVFormatPose.TUM_short:
+        elif fmt == CSVFormatPose.PositionStamped:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
         elif fmt == CSVFormatPose.PoseCov:
             return ROSMsg2CSVLine.to_PoseCov(msg, t, msg_type)
@@ -293,7 +293,7 @@ class ROSMsg2CSVLine_Test(unittest.TestCase):
         return line
 
     def test_MESSAGE_TO_TUM_SHORT(self):
-        line = self.get_lines(CSVFormatPose.TUM_short)
+        line = self.get_lines(CSVFormatPose.PositionStamped)
 
     def test_MESSAGE_TO_PoseCov(self):
         t = Time()
