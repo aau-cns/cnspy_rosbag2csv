@@ -29,7 +29,7 @@ import csv
 from tqdm import tqdm
 
 from rosbag2csv.CSVLine2ROSMsg import CSVLine2ROSMsg
-from ros_csv_formats.CSVFormat import CSVFormat
+from spatial_csv_formats.CSVFormat import CSVFormat
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
 from script_utils.utils import *
@@ -126,7 +126,7 @@ class CSV2ROSbag:
         for topicName in topic_list:
             parser_dict[topicName] = CSVParser(fn=fn_list[idx], msg_type=fmt_list[idx])
             if verbose:
-                print ("CSVROSbag: creating CSVParser for: %s reading from %s " % (topicName, fn_list[idx]))
+                print("CSVROSbag: creating CSVParser for: %s reading from %s " % (topicName, fn_list[idx]))
             idx += 1
 
         h = Header()
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     if CSV2ROSbag.extract(bagfile_name=args.bagfile_name, topic_list=args.topics,
                           fn_list=args.filenames, fmt_list=args.fmt_list, result_dir=args.result_dir,
                           verbose=args.verbose):
-        print (" ")
+        print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
         exit_success()
     else:

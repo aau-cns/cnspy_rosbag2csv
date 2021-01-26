@@ -20,7 +20,7 @@
 # enum
 ########################################################################################################################
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from ros_csv_formats.CSVFormat import CSVFormat
+from spatial_csv_formats.CSVFormat import CSVFormat
 
 
 class ROSMsg2CSVLine:

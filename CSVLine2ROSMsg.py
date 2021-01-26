@@ -20,7 +20,7 @@
 # enum
 ########################################################################################################################
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from ros_csv_formats.CSVFormat import CSVFormat
+from spatial_csv_formats.CSVFormat import CSVFormat
 
 from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
