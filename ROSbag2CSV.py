@@ -76,7 +76,7 @@ class ROSbag2CSV:
 
         topic_filewriter = dict()
         topic_headerwritten = dict()
-
+        topic_csvfile_hdls = dict()
         idx = 0
         for topicName in topic_list:
 
@@ -99,6 +99,7 @@ class ROSbag2CSV:
             filewriter = csv.writer(csvfile, delimiter=',', lineterminator='\n')
             topic_filewriter[topicName] = filewriter
             topic_headerwritten[topicName] = False
+            topic_csvfile_hdls[topicName] = csvfile
 
             if verbose:
                 print("ROSbag2CSV: creating csv file: %s " % filename)
@@ -107,6 +108,10 @@ class ROSbag2CSV:
         try:
             bag = rosbag.Bag(bagfile_name)
         except:
+            # close all csv files
+            for topicName in topic_list:
+                topic_csvfile_hdls[topicName].close()
+
             if verbose:
                 print("ROSbag2CSV: Unexpected error!")
             return False
@@ -142,6 +147,10 @@ class ROSbag2CSV:
 
                     if content is not None:
                         file_writer.writerow(content)
+
+        # close all csv files
+        for topicName in topic_list:
+            topic_csvfile_hdls[topicName].close()
 
         # check if a topic was found by checking if the topic header was written
         for topicName in topic_list:
