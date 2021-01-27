@@ -87,6 +87,24 @@ class ROSbag2CSV:
             print("* filename_list: " + str(fn_list))
             print("* CSV format: \t " + str(fmt))
 
+        ## Open BAG file:
+        try:
+            bag = rosbag.Bag(bagfile_name)
+        except:
+            if verbose:
+                print("ROSbag2CSV: Unexpected error!")
+
+            return False
+
+        info_dict = yaml.load(bag._get_yaml_info(), Loader=yaml.FullLoader)
+
+        if info_dict is None or 'messages' not in info_dict:
+            if verbose:
+                print("ROSbag2CSV: Unexpected error, bag file might be empty!")
+            bag.close()
+            return False
+
+        ## create result dir:
         if result_dir == "":
             folder = string.rstrip(bagfile_name, ".bag")
         else:
@@ -101,6 +119,7 @@ class ROSbag2CSV:
         if verbose:
             print("* result_dir: \t " + str(folder))
 
+        ## create csv file according to the topic names:
         dict_file_writers = dict()
         dict_header_written = dict()
         dict_csvfile_hdls = dict()
@@ -132,19 +151,8 @@ class ROSbag2CSV:
                 print("ROSbag2CSV: creating csv file: %s " % filename)
 
             idx = idx + 1
-        try:
-            bag = rosbag.Bag(bagfile_name)
-        except:
-            # close all csv files
-            for topicName in topic_list:
-                dict_csvfile_hdls[topicName].close()
 
-            if verbose:
-                print("ROSbag2CSV: Unexpected error!")
-            return False
-
-        info_dict = yaml.load(bag._get_yaml_info(), Loader=yaml.FullLoader)
-
+        ## check if desired topics are in the bag file:
         num_messages = info_dict['messages']
         bag_topics = info_dict['topics']
         for topicName in topic_list:
@@ -159,6 +167,7 @@ class ROSbag2CSV:
         if verbose:
             print("\nROSbag2CSV: num messages " + str(num_messages))
 
+        ## extract the desired topics from the BAG file
         for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
             if topic in topic_list:
                 message_type = ROSMessageTypes.get_message_type(msg)
@@ -175,6 +184,7 @@ class ROSbag2CSV:
                     if content is not None:
                         file_writer.writerow(content)
 
+        ## CLEANUP:
         # close all csv files
         for topicName in topic_list:
             dict_csvfile_hdls[topicName].close()
@@ -191,6 +201,8 @@ class ROSbag2CSV:
 
         if verbose:
             print("\nROSbag2CSV: extracting done! ")
+
+        bag.close()
         return True
 
 
