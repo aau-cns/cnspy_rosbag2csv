@@ -15,14 +15,16 @@ The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.o
 
 ## Dependencies
 
+* [PyYAML]()
+* [tqdm]()
+* [rosbag]()
+* [pycryptodome]()
 * [catkin_pkg (ROS)]()
 * [rospkg (ROS)]()
 * [rosbag (ROS)]()
 * [std_msgs (ROS)]()
-* [tqdm]()
 * [script_utils]()
 * [ros_csv_formats]()
-* [PyYAML]()
 
 
 

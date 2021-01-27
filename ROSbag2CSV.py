@@ -20,7 +20,6 @@
 
 import rosbag
 import time
-import string
 import os
 import argparse
 import yaml
@@ -106,7 +105,7 @@ class ROSbag2CSV:
 
         ## create result dir:
         if result_dir == "":
-            folder = string.rstrip(bagfile_name, ".bag")
+            folder = str.rstrip(bagfile_name, ".bag")
         else:
             folder = result_dir
 
@@ -131,7 +130,7 @@ class ROSbag2CSV:
                 continue
 
             if not fn_list:
-                filename = str(folder + '/') + string.replace(topicName[1:], '/', '_') + '.csv'
+                filename = str(folder + '/') + str.replace(topicName[1:], '/', '_') + '.csv'
             else:
                 fn = fn_list[idx]
                 [root, ext] = os.path.splitext(fn)
@@ -207,10 +206,9 @@ class ROSbag2CSV:
 
 
 if __name__ == "__main__":
-    # test1: --bagfile ../test/example.bag --topics /uwb_trilateration/tagDistance_raw /pose_sensor/pose /fcu/current_pose --verbose  --filenames uwb /rasdf/body_pose imu_pose.csv
-    # test2: --bagfile ../test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseCov.csv sensor_PoseCov.csv --format PoseCov
-    # test3: --bagfile ../test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseWithCov.csv sensor_PoseWithCov.csv --format PoseWithCov
-
+    # test3: python3 ROSbag2CSV.py --bagfile ../test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseWithCov.csv sensor_PoseWithCov.csv --format PoseWithCov
+    # test4: python3 ROSbag2CSV.py --bagfile ./sample_data/empty_bag.bag --topics /uwb_trilateration/tagDistance_raw /pose_sensor/pose /fcu/current_pose --verbose  --filenames uwb /rasdf/body_pose imu_pose.csv
+    # test5: python3 ROSbag2CSV.py --bagfile ./sample_data/dummy.bag --topics /pose_est /pose_gt --verbose  --filenames est gt --format TUM
     parser = argparse.ArgumentParser(
         description='ROSbag2CSV: extract and store given topics of a rosbag into a CSV file')
     parser.add_argument('--bagfile', help='input bag file', default="not specified")

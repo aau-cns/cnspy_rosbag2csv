@@ -21,7 +21,6 @@
 import rosbag
 import time
 from std_msgs.msg import Header, Time
-import string
 import os
 import argparse
 import yaml
@@ -154,7 +153,7 @@ class CSV2ROSbag:
                     print("CSVROSbag: DONE with topic {0} from file {1} (num. lines={2})!".format(tpc, fn, n))
 
         if verbose:
-            info_dict = yaml.load(bag._get_yaml_info())
+            info_dict = yaml.load(bag._get_yaml_info(), Loader=yaml.FullLoader)
             print("CSVROSbag: bag info: \n")
             print(info_dict)
         bag.close()
@@ -169,11 +168,11 @@ class CSV2ROSbag:
 #
 # class CSV2ROSbag_Test(unittest.TestCase):
 #     def test_identify(self):
-#         fn_list = ['../sample_data/ID1-pose-est-cov-short.csv', '../sample_data/ID1-pose-gt-short.csv']
+#         fn_list = ['./sample_data/ID1-pose-est-cov.csv', './sample_data/ID1-pose-gt.csv']
 #         topic_list = ['/pose_est', '/pose_gt']
 #         fmt_list = [ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED, ROSMessageTypes.GEOMETRY_MSGS_POSESTAMPED]
 #         CSV2ROSbag.extract('my.bag', topic_list, fn_list, fmt_list, result_dir=None, verbose=True)
-#
+
 
 if __name__ == "__main__":
     # unittest.main()
