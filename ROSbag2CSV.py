@@ -39,7 +39,34 @@ class ROSbag2CSV:
         pass
 
     @staticmethod
-    def extract(bagfile_name, topic_list, result_dir="", fn_list=[], verbose=False, format='TUM'):
+    def extract(bagfile_name, topic_list, result_dir="", fn_list=[], verbose=False, fmt=CSVFormatPose.TUM):
+        """"
+        Extracts a list of topic from a rosbag file and stores each topic in a file specified in "fn_list"
+
+
+        Example:
+        >> args.bagfile  = "example.bag"
+        >> args.topics =  ["/CS_200_MAV1/estimated_poseWithCov",  "/pose_sensor/pose"]
+        >> args.verbose = True
+        >> args.result_dir = "./results"
+        >> args.filenames = ["mav_PoseWithCov.csv", "sensor_PoseWithCov"]
+        >> args.format = CSVFormatPose.PoseWithCov
+        >> ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
+                      fn_list=args.filenames, result_dir=args.result_dir,
+                      verbose=args.verbose, fmt=CSVFormatPose(args.format)):
+
+
+        Input:
+        bagfile_name -- file name of the rosbag
+        topic_list -- list of topic names, these must start with a "/" (absolute topic name)
+        result_dir  -- root directory the files to be created (defined in fn_list)
+        fn_list -- list of file names;  (not the entire path!) just name with or without extension
+
+
+        Output:
+        res -- boolean about success
+        """
+
         if not os.path.isfile(bagfile_name):
             print("ROSbag2CSV: could not find file: %s" % bagfile_name)
             return False
@@ -58,7 +85,7 @@ class ROSbag2CSV:
             print("* bagfile name: " + str(bagfile_name))
             print("* topic_list: \t " + str(topic_list))
             print("* filename_list: " + str(fn_list))
-            print("* CSV format: \t " + str(format))
+            print("* CSV format: \t " + str(fmt))
 
         if result_dir == "":
             folder = string.rstrip(bagfile_name, ".bag")
@@ -74,14 +101,14 @@ class ROSbag2CSV:
         if verbose:
             print("* result_dir: \t " + str(folder))
 
-        topic_filewriter = dict()
-        topic_headerwritten = dict()
-        topic_csvfile_hdls = dict()
+        dict_file_writers = dict()
+        dict_header_written = dict()
+        dict_csvfile_hdls = dict()
         idx = 0
         for topicName in topic_list:
 
             if topicName[0] != '/':
-                print("ROSbag2CSV: Not a propper topic name: %s (should start with /)" % topicName)
+                print("ROSbag2CSV: Not a proper topic name: %s (should start with /)" % topicName)
                 continue
 
             if not fn_list:
@@ -96,10 +123,10 @@ class ROSbag2CSV:
                     filename = str(folder + '/') + tail + '.csv'
 
             csvfile = open(filename, 'w+')
-            filewriter = csv.writer(csvfile, delimiter=',', lineterminator='\n')
-            topic_filewriter[topicName] = filewriter
-            topic_headerwritten[topicName] = False
-            topic_csvfile_hdls[topicName] = csvfile
+            file_writer = csv.writer(csvfile, delimiter=',', lineterminator='\n')
+            dict_file_writers[topicName] = file_writer
+            dict_header_written[topicName] = False
+            dict_csvfile_hdls[topicName] = csvfile
 
             if verbose:
                 print("ROSbag2CSV: creating csv file: %s " % filename)
@@ -110,7 +137,7 @@ class ROSbag2CSV:
         except:
             # close all csv files
             for topicName in topic_list:
-                topic_csvfile_hdls[topicName].close()
+                dict_csvfile_hdls[topicName].close()
 
             if verbose:
                 print("ROSbag2CSV: Unexpected error!")
@@ -136,27 +163,27 @@ class ROSbag2CSV:
             if topic in topic_list:
                 message_type = ROSMessageTypes.get_message_type(msg)
                 if message_type != ROSMessageTypes.NOT_SUPPORTED:
-                    file_writer = topic_filewriter[topic]
+                    file_writer = dict_file_writers[topic]
 
-                    if not topic_headerwritten[topic]:
-                        file_writer.writerow(CSVFormatPose.get_header(format))
-                        topic_headerwritten[topic] = True
+                    if not dict_header_written[topic]:
+                        file_writer.writerow(CSVFormatPose.get_header(fmt))
+                        dict_header_written[topic] = True
 
-                    # TODO: all conversions are done in ROSMsg2CSVLine
-                    content = ROSMsg2CSVLine.to(format, msg, t, message_type)
+                    # HINT: all conversions are done in ROSMsg2CSVLine
+                    content = ROSMsg2CSVLine.to(fmt, msg, t, message_type)
 
                     if content is not None:
                         file_writer.writerow(content)
 
         # close all csv files
         for topicName in topic_list:
-            topic_csvfile_hdls[topicName].close()
+            dict_csvfile_hdls[topicName].close()
 
         # check if a topic was found by checking if the topic header was written
         for topicName in topic_list:
-            if not topic_headerwritten[topicName]:
+            if not dict_header_written[topicName]:
                 print("\nROSbag2CSV: \n\tWARNING topic [" + str(topicName) + "] was not in bag-file")
-                print("\tbag file [" + str(bagfile_name) + "] constains: ")
+                print("\tbag file [" + str(bagfile_name) + "] contains: ")
                 # print(info_dict['topics'])
                 for t in info_dict['topics']:
                     print(t['topic'])
@@ -188,7 +215,7 @@ if __name__ == "__main__":
 
     if ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
                           fn_list=args.filenames, result_dir=args.result_dir,
-                          verbose=args.verbose, format=CSVFormatPose(args.format)):
+                          verbose=args.verbose, fmt=CSVFormatPose(args.format)):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
         exit_success()
