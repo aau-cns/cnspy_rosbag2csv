@@ -6,11 +6,11 @@ The other way round is supported by the class [CSV2ROSbag](./CSV2ROSbag.py), tak
 The supported ROS1 message types are defined in [ROSMessageTypes](ROSMessageTypes.py) (basically all ROS1 [geometry_msgs](http://docs.ros.org/melodic/api/geometry_msgs/html)). 
 
 
-The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle)). Just create a new [ROSMEssageType](./ROSMessageTypes.py), and make an addition to
+The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle)). Just create a new [ROSMessageType](./ROSMessageTypes.py), and make an addition to
  * [ROSMsg2CSVLine](./ROSMsg2CSVLine.py)
  * [CSVLine2ROSMsg](./CSVLine2ROSMsg.py) 
  
- The supported CSV formats for poses are defined in the enum [CSVFormatPose]() of the package [ros_csv_formats](). 
+ The supported CSV formats for poses are defined in the enum [CSVFormatPose]() of the package [spatial_csv_formats](). 
  
 
 ## Dependencies
@@ -24,7 +24,7 @@ The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.o
 * [rosbag (ROS)]()
 * [std_msgs (ROS)]()
 * [script_utils]()
-* [ros_csv_formats]()
+* [spatial_csv_formats]()
 
 
 
