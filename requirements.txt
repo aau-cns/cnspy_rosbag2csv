@@ -1,0 +1,18 @@
+numpy
+tqdm 
+pandas 
+argparse 
+PyYAML 
+spatialmath-python
+rospy
+rospkg
+pycryptodomex
+pycryptodome
+gnupg 
+lz4 
+[-e] git+https://gitlab.aau.at/aau-cns/py3_pkgs/script_utils.git#egg=script_utils
+[-e] git+https://gitlab.aau.at/aau-cns/py3_pkgs/spatial_csv_formats.git#egg=spatial_csv_formats
+
+
+
+

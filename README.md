@@ -12,6 +12,14 @@ The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.o
  
  The supported CSV formats for poses are defined in the enum [CSVFormatPose]() of the package [spatial_csv_formats](). 
  
+## Installation
+
+Install the current code base from GitHub and pip install a link to that cloned copy
+```
+git clone https://gitlab.aau.at/aau-cns/py3_pkgs/rosbag2csv.git
+cd rosbag2csv
+pip install -e .
+```
 
 ## Dependencies
 
