@@ -15,9 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# Requirements:
-# sudo pip install PyYAML  rospkg catkin_pkg enum tqdm
-
+########################################################################################################################
 import rosbag
 import time
 from std_msgs.msg import Header, Time

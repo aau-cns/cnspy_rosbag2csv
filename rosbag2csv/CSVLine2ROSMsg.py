@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# Requirements:
-# enum
 ########################################################################################################################
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
 from spatial_csv_formats.CSVFormatPose import CSVFormatPose
@@ -129,49 +127,3 @@ class CSVLine2ROSMsg:
         # else:
         return msg, t
 
-
-########################################################################################################################
-#################################################### T E S T ###########################################################
-########################################################################################################################
-import unittest
-
-
-class CSVLine2ROSMsg_Test(unittest.TestCase):
-    def test_from_TUM(self):
-        line = str('0.1, 1.0, 2.0,3.0, 0,0,0,1.0')
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POINTSTAMPED)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_VECTOR3)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_VECTOR3STAMPED)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSESTAMPED)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSE)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_QUATERNION)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_QUATERNIONSTAMPED)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_TRANSFORM)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_TUM(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_TRANSFORMSTAMPED)
-        print(msg)
-        print('done')
-
-    def test_from_PoseWithCov(self):
-        line = str('0.1, 1.0, 2.0,3.0, 0,0,0,1.0, 8.0,8.1,8.2,8.7,8.8,8.14, 9.21,9.22,9.23,9.28,9.29,9.35')
-        msg = CSVLine2ROSMsg.from_PoseWithCov(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
-        print(msg)
-        msg = CSVLine2ROSMsg.from_PoseWithCov(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
-        print(msg)
-        print('done')
-
-
-if __name__ == "__main__":
-    unittest.main()
-    print("testing supported ROS msgs types")
