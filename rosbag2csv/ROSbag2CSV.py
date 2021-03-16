@@ -25,8 +25,8 @@ import yaml
 import csv
 from tqdm import tqdm
 
-from rosbag2csv.ROSMsg2CVSLine import ROSMsg2CSVLine
 from spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from rosbag2csv.ROSMsg2CSVLine import ROSMsg2CSVLine
 from rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
 from script_utils.utils import *
