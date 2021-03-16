@@ -15,17 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# Requirements:
-# sudo pip install PyYAML  rospkg catkin_pkg enum tqdm
+########################################################################################################################
+
+import os
 import unittest
 from rosbag2csv.CSV2ROSbag import *
 
+SAMPLE_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample_data')
+
 class CSV2ROSbag_Test(unittest.TestCase):
     def test_identify(self):
-        fn_list = ['./sample_data/ID1-pose-est-cov.csv', './sample_data/ID1-pose-gt.csv']
+        fn_list = [str(SAMPLE_DATA_DIR + '/ID1-pose-est-cov.csv'), str(SAMPLE_DATA_DIR + '/ID1-pose-gt.csv')]
         topic_list = ['/pose_est', '/pose_gt']
         fmt_list = [ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED, ROSMessageTypes.GEOMETRY_MSGS_POSESTAMPED]
-        CSV2ROSbag.extract('my.bag', topic_list, fn_list, fmt_list, result_dir=None, verbose=True)
+        CSV2ROSbag.extract('my.bag', topic_list, fn_list, fmt_list, result_dir=str(SAMPLE_DATA_DIR + '/results'), verbose=True)
 
 
 if __name__ == "__main__":
