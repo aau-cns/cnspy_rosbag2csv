@@ -10,8 +10,8 @@ pycryptodomex
 pycryptodome
 gnupg
 lz4
-script_utils
-spatial_csv_formats
+cnspy_script_utils
+cnspy_spatial_csv_formats
 
 
 
