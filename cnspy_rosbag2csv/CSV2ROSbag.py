@@ -27,48 +27,10 @@ from tqdm import tqdm
 
 from cnspy_rosbag2csv.CSVLine2ROSMsg import CSVLine2ROSMsg
 from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
+import cnspy_script_utils.utils as script_utils
+
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
-
-from cnspy_script_utils.utils import *
-
-
-class CSVParser:
-    curr_msg = None
-    done = False
-    t = None
-    fmt = None
-    file = None
-    line_number = 0
-    msg_type = None
-    fn = None
-
-    def __init__(self, fn, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED):
-        self.fmt = CSVFormatPose.identify_format(fn)
-        assert (self.fmt is not CSVFormatPose.none)
-        self.fn = fn
-        self.msg_type = msg_type
-
-        self.file = open(fn, "r")
-        line = self.file.readline()
-        header = str(line).rstrip("\n\r")
-        self.next_line()
-
-    def __del__(self):
-        # Closing files
-        self.file.close()
-
-    def next_line(self):
-        if self.done:
-            return False
-
-        line = self.file.readline()
-        if not line:
-            self.done = True
-            return False
-        line = str(line).rstrip("\n\r")
-        self.curr_msg, self.t = CSVLine2ROSMsg.to(self.fmt, line, self.line_number, self.msg_type)
-        self.line_number += 1
-        return True
+from cnspy_rosbag2csv.CSVParser import CSVParser
 
 
 class CSV2ROSbag:
@@ -158,24 +120,8 @@ class CSV2ROSbag:
         return True
 
 
-########################################################################################################################
-#################################################### T E S T ###########################################################
-########################################################################################################################
-# import unittest
-#
-#
-# class CSV2ROSbag_Test(unittest.TestCase):
-#     def test_identify(self):
-#         fn_list = ['./sample_data/ID1-pose-est-cov.csv', './sample_data/ID1-pose-gt.csv']
-#         topic_list = ['/pose_est', '/pose_gt']
-#         fmt_list = [ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED, ROSMessageTypes.GEOMETRY_MSGS_POSESTAMPED]
-#         CSV2ROSbag.extract('my.bag', topic_list, fn_list, fmt_list, result_dir=None, verbose=True)
-
 
 if __name__ == "__main__":
-    # unittest.main()
-    # exit_success()
-
     # --bagfile_name dummy.bag --topics /pose_est /pose_gt --filenames ./sample_data/ID1-pose-est-cov.csv ./sample_data/ID1-pose-gt.csv --fmt_list GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED GEOMETRY_MSGS_POSESTAMPED --verbose
 
     parser = argparse.ArgumentParser(
@@ -197,6 +143,6 @@ if __name__ == "__main__":
                           verbose=args.verbose):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
-        exit_success()
+        script_utils.exit_success()
     else:
-        exit_failure()
+        script_utils.exit_failure()
