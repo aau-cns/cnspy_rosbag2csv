@@ -1,4 +1,4 @@
-#  ROSBAG2CSV -- Package
+#  cnspy_rosbag2csv -- Package
 
 A package to convert different [ROS1] messages for **POSES**. Messages contained in rosbag files can be converted into CSV files in different output formats using [ROSBAG2CSV](./ROSbag2CSV.py). 
 The other way round is supported by the class [CSV2ROSbag](./CSV2ROSbag.py), taking multiple CSV files and writing them into a single bag file. 
@@ -10,14 +10,14 @@ The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.o
  * [ROSMsg2CSVLine](./ROSMsg2CSVLine.py)
  * [CSVLine2ROSMsg](./CSVLine2ROSMsg.py) 
  
- The supported CSV formats for poses are defined in the enum [CSVFormatPose]() of the package [spatial_csv_formats](). 
+ The supported CSV formats for poses are defined in the enum [CSVFormatPose]() of the package [cnspy_spatial_csv_formats](). 
  
 ## Installation
 
 Install the current code base from GitHub and pip install a link to that cloned copy
 ```
-git clone https://gitlab.aau.at/aau-cns/py3_pkgs/rosbag2csv.git
-cd rosbag2csv
+git clone https://gitlab.aau.at/aau-cns/py3_pkgs/cnspy_rosbag2csv.git
+cd cnspy_rosbag2csv
 pip install -e .
 ```
 
@@ -31,8 +31,8 @@ pip install -e .
 * [rospkg (ROS)]()
 * [rosbag (ROS)]()
 * [std_msgs (ROS)]()
-* [script_utils]()
-* [spatial_csv_formats]()
+* [cnspy_script_utils]()
+* [cnspy_spatial_csv_formats]()
 
 
 

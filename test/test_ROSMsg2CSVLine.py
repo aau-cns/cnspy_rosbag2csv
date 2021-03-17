@@ -20,9 +20,9 @@
 # enum
 ########################################################################################################################
 import unittest
-from rosbag2csv.ROSMsg2CSVLine import *
-from rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_rosbag2csv.ROSMsg2CSVLine import *
+from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
+from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
 
 from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped

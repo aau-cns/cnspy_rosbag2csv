@@ -17,8 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 ########################################################################################################################
-from rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
+from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
 
 from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped

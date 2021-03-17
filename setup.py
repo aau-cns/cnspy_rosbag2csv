@@ -14,18 +14,20 @@ with open(path.join(here, 'RELEASE'), encoding='utf-8') as f:
     release = f.read()
 
 setup(
-    name='rosbag2csv',
+    name='cnspy_rosbag2csv',
     version=release,
     author='Roland Jung',
     author_email='roland.jung@aau.at',    
     description='ROS1 rosbag to CSV file converter and vice versa.',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://gitlab.aau.at/aau-cns/py3_pkgs/rosbag2csv/',
+    url='https://gitlab.aau.at/aau-cns/py3_pkgs/cnspy_rosbag2csv/',
     project_urls={
-        "Bug Tracker": "https://gitlab.aau.at/aau-cns/py3_pkgs/rosbag2csv/issues",
+        "Bug Tracker": "https://gitlab.aau.at/aau-cns/py3_pkgs/cnspy_rosbag2csv/issues",
     },    
     classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
@@ -33,5 +35,5 @@ setup(
     
     packages=find_packages(exclude=["test_*", "TODO*"]),
     python_requires='>=3.6',
-    install_requires=['numpy', 'tqdm', 'pandas', 'argparse', 'PyYAML', 'spatialmath-python', 'rospy', 'rospkg', 'pycryptodomex', 'pycryptodome', 'gnupg', 'lz4', 'script_utils', 'spatial_csv_formats'],
+    install_requires=['numpy', 'tqdm', 'pandas', 'argparse', 'PyYAML', 'spatialmath-python', 'rospy', 'rospkg', 'pycryptodomex', 'pycryptodome', 'gnupg', 'lz4', 'cnspy_script_utils', 'cnspy_spatial_csv_formats'],
 )

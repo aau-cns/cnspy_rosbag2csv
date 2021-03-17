@@ -18,8 +18,8 @@
 #
 ########################################################################################################################
 import unittest
-from rosbag2csv.CSVLine2ROSMsg import *
-from rosbag2csv.ROSMessageTypes import ROSMessageTypes
+from cnspy_rosbag2csv.CSVLine2ROSMsg import *
+from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
 
 class CSVLine2ROSMsg_Test(unittest.TestCase):

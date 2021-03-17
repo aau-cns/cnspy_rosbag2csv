@@ -25,11 +25,11 @@ import yaml
 import csv
 from tqdm import tqdm
 
-from rosbag2csv.CSVLine2ROSMsg import CSVLine2ROSMsg
-from spatial_csv_formats.CSVFormatPose import CSVFormatPose
-from rosbag2csv.ROSMessageTypes import ROSMessageTypes
+from cnspy_rosbag2csv.CSVLine2ROSMsg import CSVLine2ROSMsg
+from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
-from script_utils.utils import *
+from cnspy_script_utils.utils import *
 
 
 class CSVParser:

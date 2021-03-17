@@ -19,7 +19,7 @@
 
 import os
 import unittest
-from rosbag2csv.CSV2ROSbag import *
+from cnspy_rosbag2csv.CSV2ROSbag import *
 
 SAMPLE_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample_data')
 

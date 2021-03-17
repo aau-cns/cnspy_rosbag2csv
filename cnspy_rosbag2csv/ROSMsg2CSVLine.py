@@ -17,8 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 ########################################################################################################################
-from rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
+from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
 
 
 class ROSMsg2CSVLine:
