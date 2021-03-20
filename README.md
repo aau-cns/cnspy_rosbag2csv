@@ -1,38 +1,37 @@
 #  cnspy_rosbag2csv -- Package
 
-A package to convert different [ROS1] messages for **POSES**. Messages contained in rosbag files can be converted into CSV files in different output formats using [ROSBAG2CSV](./ROSbag2CSV.py). 
-The other way round is supported by the class [CSV2ROSbag](./CSV2ROSbag.py), taking multiple CSV files and writing them into a single bag file. 
+A package to convert different [ROS1] messages for **POSES**. Messages contained in rosbag files can be converted into CSV files in different output formats using [ROSBAG2CSV](./cnspy_rosbag2csv/ROSbag2CSV.py). 
+The other way round is supported by the class [CSV2ROSbag](./cnspy_rosbag2csv/CSV2ROSbag.py), taking multiple CSV files and writing them into a single bag file. 
 
-The supported ROS1 message types are defined in [ROSMessageTypes](ROSMessageTypes.py) (basically all ROS1 [geometry_msgs](http://docs.ros.org/melodic/api/geometry_msgs/html)). 
+The supported ROS1 message types are defined in [ROSMessageTypes](./cnspy_rosbag2csv/ROSMessageTypes.py) (basically all ROS1 [geometry_msgs](http://docs.ros.org/melodic/api/geometry_msgs/html)). 
 
 
-The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle)). Just create a new [ROSMessageType](./ROSMessageTypes.py), and make an addition to
- * [ROSMsg2CSVLine](./ROSMsg2CSVLine.py)
- * [CSVLine2ROSMsg](./CSVLine2ROSMsg.py) 
+The package is easily extendable ([Open-Closed-Principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle)). Just create a new [ROSMessageType](./cnspy_rosbag2csv/ROSMessageTypes.py), and make an addition to
+ * [ROSMsg2CSVLine](./cnspy_rosbag2csv/ROSMsg2CSVLine.py)
+ * [CSVLine2ROSMsg](./cnspy_rosbag2csv/CSVLine2ROSMsg.py) 
  
- The supported CSV formats for poses are defined in the enum [CSVFormatPose]() of the package [cnspy_spatial_csv_formats](). 
+ The supported CSV formats for poses are defined in the enum [CSVFormatPose](https://github.com/aau-cns/cnspy_spatial_csv_formats/cnspy_spatial_csv_formats/CSVFormatPose.py) of the package [cnspy_spatial_csv_formats](https://github.com/aau-cns/cnspy_spatial_csv_formats). 
  
 ## Installation
 
 Install the current code base from GitHub and pip install a link to that cloned copy
 ```
-git clone https://gitlab.aau.at/aau-cns/py3_pkgs/cnspy_rosbag2csv.git
+git clone https://github.com/aau-cns/cnspy_rosbag2csv.git
 cd cnspy_rosbag2csv
 pip install -e .
 ```
 
 ## Dependencies
 
+It is part of the [cnspy eco-system](https://github.com/aau-cns/cnspy_eco_system_test) of the [cns-github](https://github.com/aau-cns) group.  
+Main dependencies are:
+
 * [PyYAML]()
 * [tqdm]()
-* [rosbag]()
-* [pycryptodome]()
-* [catkin_pkg (ROS)]()
-* [rospkg (ROS)]()
-* [rosbag (ROS)]()
-* [std_msgs (ROS)]()
-* [cnspy_script_utils]()
-* [cnspy_spatial_csv_formats]()
+* [rospy (ROS)]()
+* [spatialmath-python](https://github.com/petercorke/spatialmath-python)
+* [cnspy_script_utils](https://github.com/aau-cns/cnspy_script_utils)
+* [cnspy_spatial_csv_formats](https://github.com/aau-cns/cnspy_spatial_csv_formats)
 
 
 

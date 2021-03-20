@@ -21,9 +21,9 @@ setup(
     description='ROS1 rosbag to CSV file converter and vice versa.',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://gitlab.aau.at/aau-cns/py3_pkgs/cnspy_rosbag2csv/',
+    url='https://github.com/aau-cns/cnspy_rosbag2csv/',
     project_urls={
-        "Bug Tracker": "https://gitlab.aau.at/aau-cns/py3_pkgs/cnspy_rosbag2csv/issues",
+        "Bug Tracker": "https://github.com/aau-cns/cnspy_rosbag2csv/issues",
     },    
     classifiers=[
         'Development Status :: 4 - Beta',
