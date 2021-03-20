@@ -20,6 +20,10 @@ git clone https://github.com/aau-cns/cnspy_rosbag2csv.git
 cd cnspy_rosbag2csv
 pip install -e .
 ```
+or the [official package](https://pypi.org/project/cnspy-rosbag2csv/) via
+```commandline
+pip install cnspy-rosbag2csv
+```
 
 ## Dependencies
 
