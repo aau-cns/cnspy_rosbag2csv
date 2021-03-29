@@ -27,6 +27,8 @@ pip install cnspy-rosbag2csv
 
 ## Dependencies
 
+This package requires a local ROS installation. 
+
 It is part of the [cnspy eco-system](https://github.com/aau-cns/cnspy_eco_system_test) of the [cns-github](https://github.com/aau-cns) group.  
 Main dependencies are:
 

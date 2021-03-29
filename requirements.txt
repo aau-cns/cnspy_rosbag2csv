@@ -4,8 +4,6 @@ pandas
 argparse
 PyYAML
 spatialmath-python
-rospy
-rospkg
 pycryptodomex
 pycryptodome
 gnupg
