@@ -25,6 +25,7 @@ from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCov
 from geometry_msgs.msg import Quaternion, QuaternionStamped, Transform, TransformStamped
 from std_msgs.msg import Header, Time
 
+# - TODO: support PoseWithCov
 
 class CSVLine2ROSMsg:
     def __init__(self):
@@ -34,8 +35,8 @@ class CSVLine2ROSMsg:
     def to(fmt, line, line_number, msg_type):
         if str(fmt) == 'TUM':
             return CSVLine2ROSMsg.from_TUM(line, line_number, msg_type)
-        elif str(fmt) == 'PoseWithCov':
-            return CSVLine2ROSMsg.from_PoseWithCov(line, line_number, msg_type)
+        elif str(fmt) == 'PosOrientWithCov':
+            return CSVLine2ROSMsg.from_PosOrientWithCov(line, line_number, msg_type)
         else:
             print("CSVLine2ROSMsg.to(...): type {0} not supported".format(str(fmt)))
         return None
@@ -95,11 +96,11 @@ class CSVLine2ROSMsg:
         return msg, s.t
 
     @staticmethod
-    def from_PoseWithCov(line, line_number, msg_type):
+    def from_PosOrientWithCov(line, line_number, msg_type):
         msg, t = CSVLine2ROSMsg.from_TUM(line, line_number, msg_type=msg_type)
         if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
             # TODO: inefficient as line is parsed twice!
-            s = CSVFormatPose.parse(line, CSVFormatPose.PoseWithCov)
+            s = CSVFormatPose.parse(line, CSVFormatPose.PosOrientWithCov)
             P = [0.] * 36
             P[0] = s.pxx
             P[1] = s.pxy

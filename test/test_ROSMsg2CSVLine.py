@@ -115,19 +115,19 @@ class ROSMsg2CSVLine_Test(unittest.TestCase):
         t.secs = 0
         pose_cov = PoseWithCovarianceStamped()
         pose_cov.pose.covariance = range(0, 36, 1)
-        line = ROSMsg2CSVLine.to_PoseCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
+        line = ROSMsg2CSVLine.to_PosOrientCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
         print('line1:' + str(line))
 
         pose_cov = PoseWithCovariance()
         pose_cov.covariance = range(0, 36, 1)
-        line = ROSMsg2CSVLine.to_PoseCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
+        line = ROSMsg2CSVLine.to_PosOrientCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
         print('line2:' + str(line))
         self.assertTrue(len(line) == 13)
-        line = self.get_lines(CSVFormatPose.PoseCov)
+        line = self.get_lines(CSVFormatPose.PosOrientCov)
         self.assertTrue(len(line) == 13)
 
     def test_MESSAGE_TO_PoseWithCov(self):
-        line = self.get_lines(CSVFormatPose.PoseWithCov)
+        line = self.get_lines(CSVFormatPose.PosOrientWithCov)
         print('line:' + str(line))
         self.assertTrue(len(line) == 20)
 

@@ -31,7 +31,7 @@ class ROSbag2CSV_Test(unittest.TestCase):
         bagfile = str(SAMPLE_DATA_DIR + '/example.bag')    
         self.assertTrue(ROSbag2CSV.extract(bagfile_name=bagfile, topic_list=topic_list,
                           fn_list=fn_list, result_dir=str(SAMPLE_DATA_DIR + '/results'),
-                          verbose=True, fmt=CSVFormatPose('PoseWithCov')))
+                          verbose=True, fmt=CSVFormatPose('PosOrientWithCov')))
 
 
 if __name__ == "__main__":

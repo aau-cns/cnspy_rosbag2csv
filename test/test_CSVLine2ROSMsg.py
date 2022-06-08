@@ -51,9 +51,9 @@ class CSVLine2ROSMsg_Test(unittest.TestCase):
 
     def test_from_PoseWithCov(self):
         line = str('0.1, 1.0, 2.0,3.0, 0,0,0,1.0, 8.0,8.1,8.2,8.7,8.8,8.14, 9.21,9.22,9.23,9.28,9.29,9.35')
-        msg = CSVLine2ROSMsg.from_PoseWithCov(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
+        msg = CSVLine2ROSMsg.from_PosOrientWithCov(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
         print(msg)
-        msg = CSVLine2ROSMsg.from_PoseWithCov(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
+        msg = CSVLine2ROSMsg.from_PosOrientWithCov(line, 1, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
         print(msg)
         print('done')
 

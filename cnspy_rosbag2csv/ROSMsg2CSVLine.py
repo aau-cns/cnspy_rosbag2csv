@@ -20,7 +20,7 @@
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
 
-
+# - TODO: support PoseWithCov
 class ROSMsg2CSVLine:
     def __init__(self):
         pass
@@ -31,10 +31,10 @@ class ROSMsg2CSVLine:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
         elif fmt == CSVFormatPose.PositionStamped:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
-        elif fmt == CSVFormatPose.PoseCov:
-            return ROSMsg2CSVLine.to_PoseCov(msg, t, msg_type)
-        elif fmt == CSVFormatPose.PoseWithCov:
-            return ROSMsg2CSVLine.to_PoseWithCov(msg, t, msg_type)
+        elif fmt == CSVFormatPose.PosOrientCov:
+            return ROSMsg2CSVLine.to_PosOrientCov(msg, t, msg_type)
+        elif fmt == CSVFormatPose.PosOrientWithCov:
+            return ROSMsg2CSVLine.to_PosOrientWithCov(msg, t, msg_type)
         else:
             return None
 
@@ -161,7 +161,7 @@ class ROSMsg2CSVLine:
         return None
 
     @staticmethod
-    def to_PoseCov(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
+    def to_PosOrientCov(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
 
         if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
             if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
@@ -179,7 +179,7 @@ class ROSMsg2CSVLine:
         return None
 
     @staticmethod
-    def to_PoseWithCov(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
+    def to_PosOrientWithCov(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
 
         if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
             if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
