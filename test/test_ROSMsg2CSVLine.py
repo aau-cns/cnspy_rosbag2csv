@@ -22,7 +22,7 @@
 import unittest
 from cnspy_rosbag2csv.ROSMsg2CSVLine import *
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 
 from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
@@ -108,7 +108,7 @@ class ROSMsg2CSVLine_Test(unittest.TestCase):
         return line
 
     def test_MESSAGE_TO_TUM_SHORT(self):
-        line = self.get_lines(CSVFormatPose.PositionStamped)
+        line = self.get_lines(CSVSpatialFormatType.PositionStamped)
 
     def test_MESSAGE_TO_PoseCov(self):
         t = Time()
@@ -123,11 +123,11 @@ class ROSMsg2CSVLine_Test(unittest.TestCase):
         line = ROSMsg2CSVLine.to_PosOrientCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
         print('line2:' + str(line))
         self.assertTrue(len(line) == 13)
-        line = self.get_lines(CSVFormatPose.PosOrientCov)
+        line = self.get_lines(CSVSpatialFormatType.PosOrientCov)
         self.assertTrue(len(line) == 13)
 
     def test_MESSAGE_TO_PoseWithCov(self):
-        line = self.get_lines(CSVFormatPose.PosOrientWithCov)
+        line = self.get_lines(CSVSpatialFormatType.PosOrientWithCov)
         print('line:' + str(line))
         self.assertTrue(len(line) == 20)
 

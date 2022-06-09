@@ -18,7 +18,7 @@
 #
 ########################################################################################################################
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 
 # - TODO: support PoseWithCov
 class ROSMsg2CSVLine:
@@ -27,13 +27,13 @@ class ROSMsg2CSVLine:
 
     @staticmethod
     def to(fmt, msg, t, msg_type):
-        if fmt == CSVFormatPose.TUM:
+        if fmt == CSVSpatialFormatType.TUM:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
-        elif fmt == CSVFormatPose.PositionStamped:
+        elif fmt == CSVSpatialFormatType.PositionStamped:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
-        elif fmt == CSVFormatPose.PosOrientCov:
+        elif fmt == CSVSpatialFormatType.PosOrientCov:
             return ROSMsg2CSVLine.to_PosOrientCov(msg, t, msg_type)
-        elif fmt == CSVFormatPose.PosOrientWithCov:
+        elif fmt == CSVSpatialFormatType.PosOrientWithCov:
             return ROSMsg2CSVLine.to_PosOrientWithCov(msg, t, msg_type)
         else:
             return None

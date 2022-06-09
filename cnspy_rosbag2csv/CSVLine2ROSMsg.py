@@ -18,7 +18,7 @@
 #
 ########################################################################################################################
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
-from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 
 from geometry_msgs.msg import Point, PointStamped, Vector3, Vector3Stamped
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCovarianceStamped
@@ -44,7 +44,7 @@ class CSVLine2ROSMsg:
     @staticmethod
     def from_TUM(line, line_number, msg_type):
         msg = None
-        s = CSVFormatPose.parse(line, CSVFormatPose.TUM)
+        s = CSVSpatialFormatType.parse(line, CSVSpatialFormatType.TUM)
         h = Header()
         h.stamp = h.stamp.from_sec(s.t)
         h.seq = int(line_number)
@@ -100,7 +100,7 @@ class CSVLine2ROSMsg:
         msg, t = CSVLine2ROSMsg.from_TUM(line, line_number, msg_type=msg_type)
         if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
             # TODO: inefficient as line is parsed twice!
-            s = CSVFormatPose.parse(line, CSVFormatPose.PosOrientWithCov)
+            s = CSVSpatialFormatType.parse(line, CSVSpatialFormatType.PosOrientWithCov)
             P = [0.] * 36
             P[0] = s.pxx
             P[1] = s.pxy

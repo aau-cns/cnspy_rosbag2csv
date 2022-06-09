@@ -26,7 +26,7 @@ import csv
 from tqdm import tqdm
 
 from cnspy_rosbag2csv.CSVLine2ROSMsg import CSVLine2ROSMsg
-from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 import cnspy_script_utils.utils as script_utils
 
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes

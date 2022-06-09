@@ -21,7 +21,7 @@ import os
 import csv
 
 from cnspy_rosbag2csv.CSVLine2ROSMsg import CSVLine2ROSMsg
-from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
 class CSVParser:
@@ -35,8 +35,8 @@ class CSVParser:
     fn = None
 
     def __init__(self, fn, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED):
-        self.fmt = CSVFormatPose.identify_format(fn)
-        assert (self.fmt is not CSVFormatPose.none)
+        self.fmt = CSVSpatialFormatType.identify_format(fn)
+        assert (self.fmt is not CSVSpatialFormatType.none)
         self.fn = fn
         self.msg_type = msg_type
 

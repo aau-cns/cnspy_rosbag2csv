@@ -25,7 +25,7 @@ import yaml
 import csv
 from tqdm import tqdm
 
-from cnspy_spatial_csv_formats.CSVFormatPose import CSVFormatPose
+from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 from cnspy_rosbag2csv.ROSMsg2CSVLine import ROSMsg2CSVLine
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
@@ -37,7 +37,7 @@ class ROSbag2CSV:
         pass
 
     @staticmethod
-    def extract(bagfile_name, topic_list, result_dir="", fn_list=[], verbose=False, fmt=CSVFormatPose.TUM):
+    def extract(bagfile_name, topic_list, result_dir="", fn_list=[], verbose=False, fmt=CSVSpatialFormatType.TUM):
         """"
         Extracts a list of topic from a rosbag file and stores each topic in a file specified in "fn_list"
 
@@ -48,10 +48,10 @@ class ROSbag2CSV:
         >> args.verbose = True
         >> args.result_dir = "./results"
         >> args.filenames = ["mav_PoseWithCov.csv", "sensor_PoseWithCov"]
-        >> args.format = CSVFormatPose.PoseWithCov
+        >> args.format = CSVSpatialFormatType.PoseWithCov
         >> ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
                       fn_list=args.filenames, result_dir=args.result_dir,
-                      verbose=args.verbose, fmt=CSVFormatPose(args.format)):
+                      verbose=args.verbose, fmt=CSVSpatialFormatType(args.format)):
 
 
         Input:
@@ -173,7 +173,7 @@ class ROSbag2CSV:
                     file_writer = dict_file_writers[topic]
 
                     if not dict_header_written[topic]:
-                        file_writer.writerow(CSVFormatPose.get_header(fmt))
+                        file_writer.writerow(CSVSpatialFormatType.get_header(fmt))
                         dict_header_written[topic] = True
 
                     # HINT: all conversions are done in ROSMsg2CSVLine
@@ -216,15 +216,15 @@ if __name__ == "__main__":
     parser.add_argument('--result_dir', help='directory to store results [otherwise bagfile name will be a directory]',
                         default='')
     parser.add_argument('--verbose', action='store_true', default=False)
-    parser.add_argument('--format', help='CSV format', choices=CSVFormatPose.list(),
-                        default=str(CSVFormatPose.TUM))
+    parser.add_argument('--format', help='CSV format', choices=CSVSpatialFormatType.list(),
+                        default=str(CSVSpatialFormatType.TUM))
 
     tp_start = time.time()
     args = parser.parse_args()
 
     if ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
                           fn_list=args.filenames, result_dir=args.result_dir,
-                          verbose=args.verbose, fmt=CSVFormatPose(args.format)):
+                          verbose=args.verbose, fmt=CSVSpatialFormatType(args.format)):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
         script_utils.exit_success()
