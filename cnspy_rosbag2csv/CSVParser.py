@@ -21,28 +21,29 @@ import os
 import csv
 
 from cnspy_rosbag2csv.CSVLine2ROSMsg import CSVLine2ROSMsg
-from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
+from cnspy_spatial_csv_formats.CSVSpatialFormat import CSVSpatialFormat
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
 class CSVParser:
     curr_msg = None
     done = False
     t = None
-    fmt = None
+    fmt = None  # CSVSpatialFormat
     file = None
     line_number = 0
     msg_type = None
     fn = None
+    header = None
 
     def __init__(self, fn, msg_type=ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED):
-        self.fmt = CSVSpatialFormatType.identify_format(fn)
-        assert (self.fmt is not CSVSpatialFormatType.none)
+        self.fmt = CSVSpatialFormat.identify_format(fn)
+        assert (self.fmt is not CSVSpatialFormat.type.none)
         self.fn = fn
         self.msg_type = msg_type
 
         self.file = open(fn, "r")
         line = self.file.readline()
-        header = str(line).rstrip("\n\r")
+        self.header = str(line).rstrip("\n\r")
         self.next_line()
 
     def __del__(self):
@@ -58,6 +59,6 @@ class CSVParser:
             self.done = True
             return False
         line = str(line).rstrip("\n\r")
-        self.curr_msg, self.t = CSVLine2ROSMsg.to(self.fmt, line, self.line_number, self.msg_type)
+        self.curr_msg, self.t = CSVLine2ROSMsg.to(self.fmt.type, line, self.line_number, self.msg_type)
         self.line_number += 1
         return True

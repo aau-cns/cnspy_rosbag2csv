@@ -37,8 +37,12 @@ class CSVLine2ROSMsg:
             return CSVLine2ROSMsg.from_TUM(line, line_number, msg_type)
         elif str(fmt) == 'PosOrientWithCov':
             return CSVLine2ROSMsg.from_PosOrientWithCov(line, line_number, msg_type)
+        elif str(fmt) == 'PoseWithCov':
+            return CSVLine2ROSMsg.from_PoseWithCov(line, line_number, msg_type)
         else:
             print("CSVLine2ROSMsg.to(...): type {0} not supported".format(str(fmt)))
+            assert False
+
         return None
 
     @staticmethod
@@ -120,6 +124,58 @@ class CSVLine2ROSMsg:
             P[29] = s.qpy
             P[34] = s.qpy
             P[35] = s.qyy
+            if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
+                msg.pose.covariance = P
+            else:
+                msg.covariance = P
+
+        # else:
+        return msg, t
+
+    @staticmethod
+    def from_PoseWithCov(line, line_number, msg_type):
+        msg, t = CSVLine2ROSMsg.from_TUM(line, line_number, msg_type=msg_type)
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
+            # TODO: inefficient as line is parsed twice!
+            s = CSVSpatialFormatType.parse(line, CSVSpatialFormatType.PoseWithCov)
+            P = [0.] * 36
+            P[0] = s.Txx
+            P[1] = s.Txy
+            P[2] = s.Txz
+            P[3] = s.Txa
+            P[4] = s.Txb
+            P[5] = s.Txc
+            P[6] = s.Txy
+            P[7] = s.Tyy
+            P[8] = s.Tyz
+            P[9] = s.Tya
+            P[10] = s.Tyb
+            P[11] = s.Tyc
+            P[0+6*2] = s.Txz
+            P[1+6*2] = s.Tyz
+            P[2+6*2] = s.Tzz
+            P[3+6*2] = s.Tza
+            P[4+6*2] = s.Tzb
+            P[5+6*2] = s.Tzc
+            P[0+6*3] = s.Txa
+            P[1+6*3] = s.Tya
+            P[2+6*3] = s.Tza
+            P[3+6*3] = s.Taa
+            P[4+6*3] = s.Tab
+            P[5+6*3] = s.Tac
+            P[0+6*4] = s.Txb
+            P[1+6*4] = s.Tyb
+            P[2+6*4] = s.Tzb
+            P[3+6*4] = s.Tab
+            P[4+6*4] = s.Tbb
+            P[5+6*4] = s.Tbc
+            P[0+6*5] = s.Txc
+            P[1+6*5] = s.Tyc
+            P[2+6*5] = s.Tzc
+            P[3+6*5] = s.Tac
+            P[4+6*5] = s.Tbc
+            P[5+6*5] = s.Tcc
+
             if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
                 msg.pose.covariance = P
             else:

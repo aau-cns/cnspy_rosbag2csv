@@ -35,8 +35,13 @@ class ROSMsg2CSVLine:
             return ROSMsg2CSVLine.to_PosOrientCov(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PosOrientWithCov:
             return ROSMsg2CSVLine.to_PosOrientWithCov(msg, t, msg_type)
+        elif fmt == CSVSpatialFormatType.PoseWithCov:
+            return ROSMsg2CSVLine.to_PoseWithCov(msg, t, msg_type)
         else:
-            return None
+            print("ROSMsg2CSVLine.to(...): type {0} not supported".format(str(fmt)))
+            assert False
+
+        return None
 
     @staticmethod
     def to_TUM(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
@@ -179,6 +184,29 @@ class ROSMsg2CSVLine:
         return None
 
     @staticmethod
+    def to_PoseCov(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
+            if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
+                P = msg_.pose.covariance
+                t = msg_.header.stamp.to_sec()
+            else:
+                P = msg_.covariance
+                t = float(t_.secs) + float(t_.nsecs) * 1e-9
+
+            return ["%f" % (t), P[0], P[1], P[2], P[3], P[4], P[5],
+                    P[7], P[8], P[9], P[10], P[11],
+                    P[14], P[15], P[16], P[17],
+                    P[21], P[22], P[23],
+                    P[28], P[29],
+                    P[35]]
+        elif msg_type != ROSMessageTypes.NOT_SUPPORTED:
+            t = float(t_.secs) + float(t_.nsecs) * 1e-9
+            return [str(t), '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+        # else:
+        return None
+
+    @staticmethod
     def to_PosOrientWithCov(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
 
         if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
@@ -198,6 +226,36 @@ class ROSMsg2CSVLine:
         elif msg_type != ROSMessageTypes.NOT_SUPPORTED:
             line = ROSMsg2CSVLine.to_TUM(msg_, t_, msg_type)
             line = line + ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+            return line
+        # else:
+        return None
+
+
+    @staticmethod
+    def to_PoseWithCov(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED or msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
+            if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
+                P = msg_.pose.covariance
+                p = msg_.pose.pose.position
+                q = msg_.pose.pose.orientation
+                t = msg_.header.stamp.to_sec()
+            else:
+                P = msg_.covariance
+                p = msg_.pose.position
+                q = msg_.pose.orientation
+                t = float(t_.secs) + float(t_.nsecs) * 1e-9
+
+            return ["%f" % (t), str(p.x), str(p.y), str(p.z), str(q.x), str(q.y), str(q.z), str(q.w),
+                    P[0], P[1], P[2], P[3], P[4], P[5],
+                    P[7], P[8], P[9], P[10], P[11],
+                    P[14], P[15], P[16], P[17],
+                    P[21], P[22], P[23],
+                    P[28], P[29],
+                    P[35]]
+        elif msg_type != ROSMessageTypes.NOT_SUPPORTED:
+            line = ROSMsg2CSVLine.to_TUM(msg_, t_, msg_type)
+            line = line + ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
             return line
         # else:
         return None
