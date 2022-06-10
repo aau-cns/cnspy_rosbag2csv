@@ -24,11 +24,18 @@ from cnspy_rosbag2csv.CSV2ROSbag import *
 SAMPLE_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample_data')
 
 class CSV2ROSbag_Test(unittest.TestCase):
-    def test_identify(self):
-        fn_list = [str(SAMPLE_DATA_DIR + '/ID1-pose-est-cov.csv'), str(SAMPLE_DATA_DIR + '/ID1-pose-gt.csv')]
-        topic_list = ['/pose_est', '/pose_gt']
+    def test_convert_PosOrientWithCov(self):
+        fn_list = [str(SAMPLE_DATA_DIR + '/ID1-pose-est-posorient-cov.csv'), str(SAMPLE_DATA_DIR + '/ID1-pose-gt.csv')]
+        topic_list = ['/pose_est_poseorient_cov', '/pose_gt']
         fmt_list = [ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED, ROSMessageTypes.GEOMETRY_MSGS_POSESTAMPED]
-        CSV2ROSbag.extract('my.bag', topic_list, fn_list, fmt_list, result_dir=str(SAMPLE_DATA_DIR + '/results'), verbose=True)
+        CSV2ROSbag.extract('my_poseorient_cov.bag', topic_list, fn_list, fmt_list, result_dir=str(SAMPLE_DATA_DIR + '/results'), verbose=True)
+
+    def test_convert_PoseWithCov(self):
+        fn_list = [str(SAMPLE_DATA_DIR + '/ID1-pose-est-pose-cov.csv'), str(SAMPLE_DATA_DIR + '/ID1-pose-gt.csv')]
+        topic_list = ['/pose_est_pose_cov', '/pose_gt']
+        fmt_list = [ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED, ROSMessageTypes.GEOMETRY_MSGS_POSESTAMPED]
+        CSV2ROSbag.extract('my_pose_cov.bag', topic_list, fn_list, fmt_list, result_dir=str(SAMPLE_DATA_DIR + '/results'), verbose=True)
+
 
 
 if __name__ == "__main__":

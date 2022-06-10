@@ -24,8 +24,8 @@ from cnspy_rosbag2csv.ROSbag2CSV import *
 SAMPLE_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample_data')
 
 class ROSbag2CSV_Test(unittest.TestCase):
-    def test_identify(self):
-        fn_list = ['/mav_PoseWithCov.csv', '/sensor_PoseWithCov.csv']
+    def test_convert2PosOrientCov(self):
+        fn_list = ['/mav_PosOrientWithCov.csv', '/sensor_PosOrientWithCov.csv']
         topic_list = ['/pose_est', '/pose_gt']
 
         bagfile = str(SAMPLE_DATA_DIR + '/example.bag')    
@@ -33,6 +33,14 @@ class ROSbag2CSV_Test(unittest.TestCase):
                                            fn_list=fn_list, result_dir=str(SAMPLE_DATA_DIR + '/results'),
                                            verbose=True, fmt=CSVSpatialFormatType('PosOrientWithCov')))
 
+    def test_convert2PosCov(self):
+        fn_list = ['/mav_PoseWithCov.csv', '/sensor_PoseWithCov.csv']
+        topic_list = ['/pose_est', '/pose_gt']
+
+        bagfile = str(SAMPLE_DATA_DIR + '/example.bag')
+        self.assertTrue(ROSbag2CSV.extract(bagfile_name=bagfile, topic_list=topic_list,
+                                           fn_list=fn_list, result_dir=str(SAMPLE_DATA_DIR + '/results'),
+                                           verbose=True, fmt=CSVSpatialFormatType('PoseWithCov')))
 
 if __name__ == "__main__":
      unittest.main()
