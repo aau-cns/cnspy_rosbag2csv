@@ -10,6 +10,7 @@ gnupg
 lz4
 cnspy_script_utils
 cnspy_spatial_csv_formats
+rospkg
 
 
 

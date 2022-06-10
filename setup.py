@@ -35,5 +35,5 @@ setup(
     
     packages=find_packages(exclude=["test_*", "TODO*"]),
     python_requires='>=3.6',
-    install_requires=['numpy', 'tqdm', 'pandas', 'argparse', 'PyYAML', 'spatialmath-python', 'pycryptodomex', 'pycryptodome', 'gnupg', 'lz4', 'cnspy_script_utils', 'cnspy_spatial_csv_formats'],
+    install_requires=['numpy', 'tqdm', 'pandas', 'argparse', 'PyYAML', 'rospkg', 'spatialmath-python', 'pycryptodomex', 'pycryptodome', 'gnupg', 'lz4', 'cnspy_script_utils', 'cnspy_spatial_csv_formats'],
 )
