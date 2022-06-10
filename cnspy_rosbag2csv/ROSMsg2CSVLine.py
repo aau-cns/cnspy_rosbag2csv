@@ -33,6 +33,8 @@ class ROSMsg2CSVLine:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PosOrientCov:
             return ROSMsg2CSVLine.to_PosOrientCov(msg, t, msg_type)
+        elif fmt == CSVSpatialFormatType.PoseCov:
+            return ROSMsg2CSVLine.to_PoseCov(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PosOrientWithCov:
             return ROSMsg2CSVLine.to_PosOrientWithCov(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PoseWithCov:

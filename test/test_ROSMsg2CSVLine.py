@@ -110,26 +110,48 @@ class ROSMsg2CSVLine_Test(unittest.TestCase):
     def test_MESSAGE_TO_TUM_SHORT(self):
         line = self.get_lines(CSVSpatialFormatType.PositionStamped)
 
-    def test_MESSAGE_TO_PoseCov(self):
+    def test_MESSAGE_TO_PosOrientCov(self):
         t = Time()
         t.secs = 0
         pose_cov = PoseWithCovarianceStamped()
         pose_cov.pose.covariance = range(0, 36, 1)
         line = ROSMsg2CSVLine.to_PosOrientCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
-        print('line1:' + str(line))
+        print('\nline1:' + str(line))
 
         pose_cov = PoseWithCovariance()
         pose_cov.covariance = range(0, 36, 1)
         line = ROSMsg2CSVLine.to_PosOrientCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
-        print('line2:' + str(line))
+        print('\nline2:' + str(line))
         self.assertTrue(len(line) == 13)
         line = self.get_lines(CSVSpatialFormatType.PosOrientCov)
         self.assertTrue(len(line) == 13)
 
-    def test_MESSAGE_TO_PoseWithCov(self):
+    def test_MESSAGE_TO_PoseCov(self):
+        t = Time()
+        t.secs = 0
+        pose_cov = PoseWithCovarianceStamped()
+        pose_cov.pose.covariance = range(0, 36, 1)
+        line = ROSMsg2CSVLine.to_PoseCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED)
+        print('\nline1:' + str(line))
+
+        pose_cov = PoseWithCovariance()
+        pose_cov.covariance = range(0, 36, 1)
+        line = ROSMsg2CSVLine.to_PoseCov(pose_cov, t, ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE)
+        print('\nline2:' + str(line))
+        self.assertTrue(len(line) == 13+9)
+        line = self.get_lines(CSVSpatialFormatType.PoseCov)
+        self.assertTrue(len(line) == 13+9)
+
+
+    def test_MESSAGE_TO_PosOrientWithCov(self):
         line = self.get_lines(CSVSpatialFormatType.PosOrientWithCov)
-        print('line:' + str(line))
+        print('\nline:' + str(line))
         self.assertTrue(len(line) == 20)
+
+    def test_MESSAGE_TO_PoseWithCov(self):
+        line = self.get_lines(CSVSpatialFormatType.PoseWithCov)
+        print('\nline:' + str(line))
+        self.assertTrue(len(line) == 29)
 
 
 if __name__ == "__main__":
