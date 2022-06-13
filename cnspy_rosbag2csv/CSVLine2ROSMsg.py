@@ -25,7 +25,6 @@ from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovariance, PoseWithCov
 from geometry_msgs.msg import Quaternion, QuaternionStamped, Transform, TransformStamped
 from std_msgs.msg import Header, Time
 
-# - TODO: support PoseWithCov
 
 class CSVLine2ROSMsg:
     def __init__(self):

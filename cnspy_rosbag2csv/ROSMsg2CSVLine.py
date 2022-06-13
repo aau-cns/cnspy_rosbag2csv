@@ -20,7 +20,7 @@
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 
-# - TODO: support PoseWithCov
+
 class ROSMsg2CSVLine:
     def __init__(self):
         pass
