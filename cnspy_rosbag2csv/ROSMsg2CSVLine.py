@@ -27,7 +27,7 @@ class ROSMsg2CSVLine:
 
     @staticmethod
     def to(fmt, msg, t, msg_type):
-        if fmt == CSVSpatialFormatType.TUM:
+        if fmt == CSVSpatialFormatType.TUM or fmt == CSVSpatialFormatType.PoseStamped:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PositionStamped:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
