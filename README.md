@@ -36,7 +36,6 @@ Main dependencies are:
 * [tqdm]()
 * [rospy (ROS)]()
 * [spatialmath-python](https://github.com/petercorke/spatialmath-python)
-* [cnspy_script_utils](https://github.com/aau-cns/cnspy_script_utils)
 * [cnspy_spatial_csv_formats](https://github.com/aau-cns/cnspy_spatial_csv_formats)
 
 

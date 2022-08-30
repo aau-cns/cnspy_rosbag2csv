@@ -29,8 +29,6 @@ from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 from cnspy_rosbag2csv.ROSMsg2CSVLine import ROSMsg2CSVLine
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
-import cnspy_script_utils.utils as script_utils
-
 
 class ROSbag2CSV:
     def __init__(self):
@@ -227,6 +225,5 @@ if __name__ == "__main__":
                           verbose=args.verbose, fmt=CSVSpatialFormatType(args.format)):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
-        script_utils.exit_success()
     else:
-        script_utils.exit_failure()
+        print("failed! after [%s sec]\n" % str(time.time() - tp_start))
