@@ -19,14 +19,15 @@
 ########################################################################################################################
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
-
+from cnspy_spatial_csv_formats.EstimationErrorType import EstimationErrorType
+from cnspy_spatial_csv_formats.ErrorRepresentationType import ErrorRepresentationType
 
 class ROSMsg2CSVLine:
     def __init__(self):
         pass
 
     @staticmethod
-    def to(fmt, msg, t, msg_type):
+    def to(fmt, msg, t, msg_type, est_err_type=EstimationErrorType.none, err_rep=ErrorRepresentationType.none):
         if fmt == CSVSpatialFormatType.TUM or fmt == CSVSpatialFormatType.PoseStamped:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PositionStamped:
@@ -39,6 +40,10 @@ class ROSMsg2CSVLine:
             return ROSMsg2CSVLine.to_PosOrientWithCov(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PoseWithCov:
             return ROSMsg2CSVLine.to_PoseWithCov(msg, t, msg_type)
+        elif fmt == CSVSpatialFormatType.PosOrientWithCovTyped:
+            return ROSMsg2CSVLine.to_PosOrientWithCovTyped(msg, t, msg_type, est_err_type, err_rep)
+        elif fmt == CSVSpatialFormatType.PoseWithCovTyped:
+            return ROSMsg2CSVLine.to_PoseWithCov(msg, t, msg_type, est_err_type, err_rep)
         else:
             print("ROSMsg2CSVLine.to(...): type {0} not supported".format(str(fmt)))
             assert False
@@ -262,3 +267,19 @@ class ROSMsg2CSVLine:
         # else:
         return None
 
+    @staticmethod
+    def to_PosOrientWithCovTyped(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED,
+                                 est_err_type=EstimationErrorType.none, err_rep=ErrorRepresentationType.none):
+
+        line = ROSMsg2CSVLine.to_PosOrientWithCov(msg_, t_, msg_type)
+        if line is not None:
+            return line + [str(est_err_type), str(err_rep)]
+        return line
+
+    @staticmethod
+    def to_PoseWithCovTyped(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED,
+                            est_err_type=EstimationErrorType.none, err_rep=ErrorRepresentationType.none):
+        line = ROSMsg2CSVLine.to_PoseWithCovCov(msg_, t_, msg_type)
+        if line is not None:
+            return line + [str(est_err_type), str(err_rep)]
+        return line

@@ -26,6 +26,8 @@ import csv
 from tqdm import tqdm
 
 from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
+from cnspy_spatial_csv_formats.EstimationErrorType import EstimationErrorType
+from cnspy_spatial_csv_formats.ErrorRepresentationType import ErrorRepresentationType
 from cnspy_rosbag2csv.ROSMsg2CSVLine import ROSMsg2CSVLine
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 
@@ -35,7 +37,10 @@ class ROSbag2CSV:
         pass
 
     @staticmethod
-    def extract(bagfile_name, topic_list, result_dir="", fn_list=[], verbose=False, fmt=CSVSpatialFormatType.TUM):
+    def extract(bagfile_name, topic_list, result_dir="", fn_list=[], verbose=False, fmt=CSVSpatialFormatType.TUM,
+                est_err_type=EstimationErrorType.none,
+                err_rep=ErrorRepresentationType.none,
+                ):
         """"
         Extracts a list of topic from a rosbag file and stores each topic in a file specified in "fn_list"
 
@@ -175,7 +180,8 @@ class ROSbag2CSV:
                         dict_header_written[topic] = True
 
                     # HINT: all conversions are done in ROSMsg2CSVLine
-                    content = ROSMsg2CSVLine.to(fmt, msg, t, message_type)
+                    content = ROSMsg2CSVLine.to(fmt, msg, t, message_type,
+                                                est_err_type=est_err_type, err_rep=err_rep)
 
                     if content is not None:
                         file_writer.writerow(content)
@@ -216,13 +222,19 @@ if __name__ == "__main__":
     parser.add_argument('--verbose', action='store_true', default=False)
     parser.add_argument('--format', help='CSV format', choices=CSVSpatialFormatType.list(),
                         default=str(CSVSpatialFormatType.TUM))
-
+    parser.add_argument('--est_err_type', help='Estimation error type (e.g. global/local pose)', choices=EstimationErrorType.list(),
+                        default=str(EstimationErrorType.none))
+    parser.add_argument('--err_rep', help='Error representation type', choices=ErrorRepresentationType.list(),
+                        default=str(ErrorRepresentationType.none))
     tp_start = time.time()
     args = parser.parse_args()
 
     if ROSbag2CSV.extract(bagfile_name=args.bagfile, topic_list=args.topics,
                           fn_list=args.filenames, result_dir=args.result_dir,
-                          verbose=args.verbose, fmt=CSVSpatialFormatType(args.format)):
+                          verbose=args.verbose, fmt=CSVSpatialFormatType(args.format),
+                          est_err_type=EstimationErrorType(args.est_err_type),
+                          err_rep=ErrorRepresentationType(args.err_rep)
+                          ):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
     else:
