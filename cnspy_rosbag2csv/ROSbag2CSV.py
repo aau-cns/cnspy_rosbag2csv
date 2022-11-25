@@ -107,7 +107,7 @@ class ROSbag2CSV:
 
         ## create result dir:
         if result_dir == "":
-            folder = str.rstrip(bagfile_name, ".bag")
+            folder = str(bagfile_name).replace(".bag", "")
         else:
             folder = result_dir
 
