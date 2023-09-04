@@ -29,7 +29,7 @@ class ROSbagMerge:
         pass
 
     @staticmethod
-    def extract(outbag_name, input_dir, verbose=False):
+    def extract(outbag_name, input_dir, verbose=False, use_header_timestamp=True):
         if not os.path.isdir(input_dir):
             print("ROSbagMerge: %s is no directory" % input_dir)
             return False
@@ -68,7 +68,7 @@ class ROSbagMerge:
 
                     # merge all topics...
                     for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
-                        if hasattr(msg, "header"):
+                        if use_header_timestamp and hasattr(msg, "header"):
                             outbag.write(topic, msg, msg.header.stamp)
                         else:
                             outbag.write(topic, msg, t)
@@ -83,10 +83,13 @@ if __name__ == "__main__":
     parser.add_argument('--input_dir', help='directory containing bag files to be merged',
                         default='')
     parser.add_argument('--verbose', action='store_true', default=False)
+    parser.add_argument('--use_header_timestamp', action='store_true',
+                        help='overwrites the bag time with the header time stamp', default=False)
+
     tp_start = time.time()
     args = parser.parse_args()
 
-    if ROSbagMerge.extract(outbag_name=args.outbag_name, input_dir=args.input_dir, verbose=args.verbose ):
+    if ROSbagMerge.extract(outbag_name=args.outbag_name, input_dir=args.input_dir, verbose=args.verbose, use_header_timestamp=args.use_header_timestamp):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
     else:
