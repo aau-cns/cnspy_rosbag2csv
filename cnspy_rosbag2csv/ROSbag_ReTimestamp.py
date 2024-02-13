@@ -81,12 +81,12 @@ class ROSbag_ReTimestamp:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='ROSbag_ReTimestamp: merge all bag file in a specified directory into one bag file')
+        description='ROSbag_ReTimestamp: sets the rosbag time to the timestamp of the msgs header')
     parser.add_argument('--outbag_name', help='name of created bag file', default="output.bag")
     parser.add_argument('--inbag_name', help='name of original bag file',
                         required=True)
     parser.add_argument('--verbose', action='store_true', default=False)
-    parser.add_argument('--offset_sec', help='offest added to the timestamp', default=0)
+    #parser.add_argument('--offset_sec', help='offest added to the timestamp', default=0)
     parser.add_argument('--use_header_timestamp', action='store_true',
                         help='overwrites the bag time with the header time stamp', default=True)
 
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     if ROSbag_ReTimestamp.extract(outbag_name=args.outbag_name,
                            inbag_name=args.inbag_name,
-                           offset_sec=float(args.offset_sec),
+                           offset_sec=0.0, #float(args.offset_sec),
                            verbose=args.verbose,
                            use_header_timestamp=args.use_header_timestamp):
         print(" ")

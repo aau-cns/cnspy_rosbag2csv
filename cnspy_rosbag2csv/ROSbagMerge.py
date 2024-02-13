@@ -142,7 +142,7 @@ class ROSbagMerge:
 #--verbose
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='ROSbagMerge: merge all bag file in a specified directory into one bag file')
+        description='ROSbagMerge: merge all bag file in a specified directory or from a provided list into one bag file')
     parser.add_argument('--outbag_name', help='name of created bag file', default="output.bag")
     parser.add_argument('--input_dir', help='directory containing bag files to be merged',
                         default=None)

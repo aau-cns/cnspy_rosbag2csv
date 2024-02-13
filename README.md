@@ -109,6 +109,56 @@ optional arguments:
 rosbag2csv$ python ROSbag2CSV.py --bagfile ../sample_data/dummy.bag --topics /pose_est /pose_gt --verbose --filename ../sample_data/NEW-ID1-pose-est-cov.csv ../sample_data/NEW-ID1-pose-gt.csv --format PoseWithCov
 ```
 
+## [ROSbagMerge](./ROSbagMerge.py)
+
+Merges all bag file in a specified directory or from a provided list into one bag file
+```commandline
+rosbag2csv$ python ROSbagMerge.py -h
+usage: ROSbagMerge.py [-h] [--outbag_name OUTBAG_NAME] [--input_dir INPUT_DIR] [--input_files INPUT_FILES [INPUT_FILES ...]] [--verbose] [--use_header_timestamp] [-l WHITE_LIST [WHITE_LIST ...]]
+
+ROSbagMerge: merge all bag file in a specified directory or from a provided list into one bag file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --outbag_name OUTBAG_NAME
+                        name of created bag file
+  --input_dir INPUT_DIR
+                        directory containing bag files to be merged
+  --input_files INPUT_FILES [INPUT_FILES ...]
+                        a list of files to be merged
+  --verbose
+  --use_header_timestamp
+                        overwrites the bag time with the header time stamp
+  -l WHITE_LIST [WHITE_LIST ...], --white_list WHITE_LIST [WHITE_LIST ...]
+                        white list of topic names or fractions of it that are expected
+
+```
+#### Example
+```commandline
+rosbag2csv$ python ROSbagMerge.py --outbag_name /tmp/merged.bag --input_files /tmp/uav10/_2024-02-06-16-33-50.bag /tmp/uav11/_2024-02-06-16-33-50.bag /tmp/uav12/_2024-02-06-16-33-50.bag --verbose --white_list mavros hw_api /tf data_handler vrpn_client uvdar/
+rosbag2csv$ python ROSbagMerge.py --outbag_name /tmp/sim_tp.bag --input_dir /tmp/MultiAgentUWB/EuRoC_D140_A0_Mesh0/run1/bags --verbose --use_header_timestamp
+```
+
+## [ROSbag_ReTimestamp](./ROSbag_ReTimestamp.py)
+
+Sets the rosbag time to the timestamp of the msgs header
+```commandline
+rosbag2csv$ python ROSbag_ReTimestamp.py -h
+usage: ROSbag_ReTimestamp.py [-h] [--outbag_name OUTBAG_NAME] --inbag_name INBAG_NAME [--verbose] [--use_header_timestamp]
+
+ROSbag_ReTimestamp: sets the rosbag time to the timestamp of the msgs header
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --outbag_name OUTBAG_NAME
+                        name of created bag file
+  --inbag_name INBAG_NAME
+                        name of original bag file
+  --verbose
+  --use_header_timestamp
+                        overwrites the bag time with the header time stamp
+```
+
 ## License
 
 Software License Agreement (GNU GPLv3  License), refer to the LICENSE file.
