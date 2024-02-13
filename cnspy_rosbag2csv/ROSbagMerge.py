@@ -46,6 +46,10 @@ class ROSbagMerge:
             print("ROSbagMerge: specify either input_dir or input_files!")
             return False
 
+        if not outbag_name.endswith(".bag"):
+            print("ROSbagMerge: %s is not a output bag file" % outbag_name)
+            return False
+
         if input_files is None:
             if not os.path.isdir(input_dir):
                 print("ROSbagMerge: %s is no directory" % input_dir)
@@ -66,6 +70,16 @@ class ROSbagMerge:
             file_list = input_files
 
         outbag_name = os.path.abspath(outbag_name)
+        folder = str(outbag_name).replace(".bag", "")
+        folder = os.path.abspath(folder)
+        try:  # else already exists
+            [head, tail] = os.path.split(folder)
+            folder = head
+            os.makedirs(folder)
+        except:
+            pass
+
+
         if verbose:
             print("ROSbagMerge:")
             print("* output bagfile name: " + str(outbag_name))
@@ -80,9 +94,13 @@ class ROSbagMerge:
                 print("* white_list:")
                 for x in white_list:
                     print("*   %s" % str(x))
-        pass
+
+            print("* result_dir: \t " + str(folder))
+            pass
 
         with rosbag.Bag(outbag_name, 'w') as outbag:
+            num_merged = 0
+            total_num_msgs = 0
             for input_bag_name in file_list:
                 if os.path.isfile(input_bag_name) and input_bag_name.endswith(".bag"):
                     if verbose:
@@ -104,14 +122,18 @@ class ROSbagMerge:
                     if verbose:
                         print("\nROSbagMerge: %s contains num messages %s" % (input_bag_name, str(num_messages)))
 
+                    total_num_msgs = total_num_msgs+ num_messages
                     # merge all topics...
                     for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
                         if ROSbagMerge.on_white_list(topic=topic, white_list=white_list):
+                            num_merged = num_merged + 1
                             if use_header_timestamp and hasattr(msg, "header"):
                                 outbag.write(topic, msg, msg.header.stamp)
                             else:
                                 outbag.write(topic, msg, t)
 
+            if verbose:
+                print("* total number merged: " + str(num_merged) + " of " + str(total_num_msgs))
             pass
         return True
 
