@@ -122,24 +122,36 @@ class ROSbagMerge:
                     if verbose:
                         print("\nROSbagMerge: %s contains num messages %s" % (input_bag_name, str(num_messages)))
 
+                    # lookup table if topic is on white list: O(1) lookup speed
+                    dict_use_topic = dict()
+                    for t in info_dict['topics']:
+                        topic_name = t['topic']
+                        dict_use_topic[topic_name] = ROSbagMerge.on_white_list(topic=topic_name, white_list=white_list)
+
                     total_num_msgs = total_num_msgs+ num_messages
                     # merge all topics...
                     for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
-                        if ROSbagMerge.on_white_list(topic=topic, white_list=white_list):
+                        if dict_use_topic[topic]:
                             num_merged = num_merged + 1
                             if use_header_timestamp and hasattr(msg, "header"):
                                 outbag.write(topic, msg, msg.header.stamp)
                             else:
                                 outbag.write(topic, msg, t)
 
+                    bag.close()
+
             if verbose:
-                print("* total number merged: " + str(num_merged) + " of " + str(total_num_msgs))
+                print("* total number merged: " + str(num_merged) + " of " + str(total_num_msgs) +
+                      " (" + str((int((1000.0*num_merged)/total_num_msgs)/10)) + "%)")
+
+            outbag.close()
             pass
         return True
 
 #--outbag_name /home/jungr/workspace/datasets/MultiAgentUWB/EuRoC_D140_A0_Mesh0/run1/sim_tp.bag
 #--input_dir /home/jungr/workspace/datasets/MultiAgentUWB/EuRoC_D140_A0_Mesh0/run1/bags
 #--verbose
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='ROSbagMerge: merge all bag file in a specified directory or from a provided list into one bag file')
