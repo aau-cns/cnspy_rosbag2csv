@@ -9,9 +9,7 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-# Get the release/version string
-with open(path.join(here, 'RELEASE'), encoding='utf-8') as f:
-    release = f.read()
+
 
 setup(
     name='cnspy_rosbag2csv',
