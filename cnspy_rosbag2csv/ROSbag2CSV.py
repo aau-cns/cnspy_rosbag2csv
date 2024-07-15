@@ -208,7 +208,7 @@ class ROSbag2CSV:
         return True
 
 
-if __name__ == "__main__":
+def main():
     # test3: python3 ROSbag2CSV.py --bagfile ../test/example.bag --topics /CS_200_MAV1/estimated_poseWithCov  /pose_sensor/pose --verbose --filename mav_PoseWithCov.csv sensor_PoseWithCov.csv --format PoseWithCov
     # test4: python3 ROSbag2CSV.py --bagfile ./sample_data/empty_bag.bag --topics /uwb_trilateration/tagDistance_raw /pose_sensor/pose /fcu/current_pose --verbose  --filenames uwb /rasdf/body_pose imu_pose.csv
     # test5: python3 ROSbag2CSV.py --bagfile ./sample_data/dummy.bag --topics /pose_est /pose_gt --verbose  --filenames est gt --format TUM
@@ -239,3 +239,9 @@ if __name__ == "__main__":
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
     else:
         print("failed! after [%s sec]\n" % str(time.time() - tp_start))
+    pass
+
+
+if __name__ == "__main__":
+    main()
+    pass

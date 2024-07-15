@@ -120,7 +120,7 @@ class CSV2ROSbag:
 
 
 
-if __name__ == "__main__":
+def main():
     # --bagfile_name dummy.bag --topics /pose_est /pose_gt --filenames ./sample_data/ID1-pose-est-posorient-cov.csv ./sample_data/ID1-pose-gt.csv --fmt_list GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED GEOMETRY_MSGS_POSESTAMPED --verbose
 
     parser = argparse.ArgumentParser(
@@ -144,3 +144,9 @@ if __name__ == "__main__":
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
     else:
         print("failed! after [%s sec]\n" % str(time.time() - tp_start))
+    pass
+
+
+if __name__ == "__main__":
+    main()
+    pass

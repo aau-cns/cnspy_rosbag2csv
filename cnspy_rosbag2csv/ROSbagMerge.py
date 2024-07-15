@@ -152,7 +152,7 @@ class ROSbagMerge:
 #--input_dir /home/jungr/workspace/datasets/MultiAgentUWB/EuRoC_D140_A0_Mesh0/run1/bags
 #--verbose
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(
         description='ROSbagMerge: merge all bag file in a specified directory or from a provided list into one bag file')
     parser.add_argument('--outbag_name', help='name of created bag file', default="output.bag")
@@ -179,3 +179,9 @@ if __name__ == "__main__":
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
     else:
         print("failed! after [%s sec]\n" % str(time.time() - tp_start))
+    pass
+
+
+if __name__ == "__main__":
+    main()
+    pass

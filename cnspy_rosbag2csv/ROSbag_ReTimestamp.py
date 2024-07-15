@@ -79,7 +79,8 @@ class ROSbag_ReTimestamp:
             pass
         return True
 
-if __name__ == "__main__":
+
+def main():
     parser = argparse.ArgumentParser(
         description='ROSbag_ReTimestamp: sets the rosbag time to the timestamp of the msgs header')
     parser.add_argument('--outbag_name', help='name of created bag file', default="output.bag")
@@ -102,3 +103,9 @@ if __name__ == "__main__":
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
     else:
         print("failed! after [%s sec]\n" % str(time.time() - tp_start))
+    pass
+
+
+if __name__ == "__main__":
+    main()
+    pass
