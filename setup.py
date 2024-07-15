@@ -13,7 +13,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='cnspy_rosbag2csv',
-    version="0.2.1",
+    version="0.2.2",
     author='Roland Jung',
     author_email='roland.jung@aau.at',    
     description='ROS1 rosbag to CSV file converter and vice versa.',
@@ -34,4 +34,13 @@ setup(
     packages=find_packages(exclude=["test_*", "TODO*"]),
     python_requires='>=3.6',
     install_requires=['numpy', 'tqdm', 'pandas', 'argparse', 'PyYAML', 'rospkg', 'spatialmath-python', 'pycryptodomex', 'pycryptodome', 'gnupg', 'lz4', 'cnspy_spatial_csv_formats'],
+    entry_points={
+        'console_scripts': [
+            'CSV2ROSbag = cnspy_rosbag2csv.CSV2ROSbag:main',
+            'ROSbag2CSV = cnspy_rosbag2csv.ROSbag2CSV:main',
+            'ROSbag_ReTimestamp = cnspy_rosbag2csv.ROSbag_ReTimestamp:main',
+            'ROSbagMerge = cnspy_rosbag2csv.ROSbagMerge:main',
+
+        ],
+    },
 )
