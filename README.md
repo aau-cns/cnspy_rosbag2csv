@@ -38,7 +38,12 @@ Main dependencies are:
 * [spatialmath-python](https://github.com/petercorke/spatialmath-python)
 * [cnspy_spatial_csv_formats](https://github.com/aau-cns/cnspy_spatial_csv_formats)
 
+## Run from terminal
 
+* CSV2ROSbag 
+* ROSbag2CSV
+* ROSbag_ReTimestamp
+* ROSbagMerge
 
 ## [CSV2ROSbag](./CSV2ROSbag.py)
 Convert multiple trajectory CSV files into a bag file. 

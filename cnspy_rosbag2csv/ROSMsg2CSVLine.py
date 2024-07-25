@@ -183,7 +183,7 @@ class ROSMsg2CSVLine:
                 P = msg_.covariance
                 t = float(t_.secs) + float(t_.nsecs) * 1e-9
 
-            return ["%f" % (t), P[0], P[1], P[2], P[7], P[8], P[15], P[21], P[22], P[23], P[28], P[29], P[35]]
+            return ["%f" % (t), P[0], P[1], P[2], P[7], P[8], P[14], P[21], P[22], P[23], P[28], P[29], P[35]]
         elif msg_type != ROSMessageTypes.NOT_SUPPORTED:
             t = float(t_.secs) + float(t_.nsecs) * 1e-9
             return [str(t), '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
