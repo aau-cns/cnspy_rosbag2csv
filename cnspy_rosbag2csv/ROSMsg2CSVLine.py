@@ -17,11 +17,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 ########################################################################################################################
+import numpy as np
+
+import geometry_msgs.msg
 from cnspy_rosbag2csv.ROSMessageTypes import ROSMessageTypes
 from cnspy_spatial_csv_formats.CSVSpatialFormatType import CSVSpatialFormatType
 from cnspy_spatial_csv_formats.EstimationErrorType import EstimationErrorType
 from cnspy_spatial_csv_formats.ErrorRepresentationType import ErrorRepresentationType
-
+from spatialmath.quaternion import UnitQuaternion
 class ROSMsg2CSVLine:
     def __init__(self):
         pass
@@ -30,6 +33,8 @@ class ROSMsg2CSVLine:
     def to(fmt, msg, t, msg_type, est_err_type=EstimationErrorType.none, err_rep=ErrorRepresentationType.none):
         if fmt == CSVSpatialFormatType.TUM or fmt == CSVSpatialFormatType.PoseStamped:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
+        elif fmt == CSVSpatialFormatType.Pose2DStamped:
+            return ROSMsg2CSVLine.to_Pose2D(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PositionStamped:
             return ROSMsg2CSVLine.to_TUM(msg, t, msg_type)
         elif fmt == CSVSpatialFormatType.PosOrientCov:
@@ -114,6 +119,68 @@ class ROSMsg2CSVLine:
                     str(msg_.transform.translation.z), str(msg_.transform.rotation.x),
                     str(msg_.transform.rotation.y),
                     str(msg_.transform.rotation.z), str(msg_.transform.rotation.w)]
+        # else:
+        return None
+
+    @staticmethod
+    def orienation_to_yaw(q) -> float:
+        q_ = np.array([q.w, q.x, q.y, q.z])
+        quat = UnitQuaternion(v=q_, norm=True)
+        rpy = quat.rpy()
+        return rpy[2]
+
+    @staticmethod
+    def to_Pose2D(msg_, t_, msg_type=ROSMessageTypes.NOT_SUPPORTED):
+        """
+
+        :rtype: list of floats
+        """
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POINTSTAMPED:
+            return ["%f" % msg_.header.stamp.to_sec(), str(msg_.point.x), str(msg_.point.y), "0"]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_VECTOR3:
+            t = float(t_.secs) + float(t_.nsecs) * 1e-9
+            return ["%f" % (t), str(msg_.x), str(msg_.y), "0"]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_VECTOR3STAMPED:
+            return ["%f" % msg_.header.stamp.to_sec(), str(msg_.vector.x), str(msg_.vector.y),
+                    "0"]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCESTAMPED:
+            return ["%f" % msg_.header.stamp.to_sec(), str(msg_.pose.pose.position.x), str(msg_.pose.pose.position.y),
+                    str(ROSMsg2CSVLine.orienation_to_yaw(msg_.pose.pose.orientation))]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSEWITHCOVARIANCE:
+            t = float(t_.secs) + float(t_.nsecs) * 1e-9
+            return ["%f" % (t), str(msg_.pose.position.x), str(msg_.pose.position.y),
+                    str(ROSMsg2CSVLine.orienation_to_yaw(msg_.pose.pose.orientation))]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSESTAMPED:
+            return ["%f" % msg_.header.stamp.to_sec(), str(msg_.pose.position.x), str(msg_.pose.position.y),
+                    str(ROSMsg2CSVLine.orienation_to_yaw(msg_.pose.orientation))]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_POSE:
+            t = float(t_.secs) + float(t_.nsecs) * 1e-9
+            return ["%f" % (t), str(msg_.position.x), str(msg_.position.y),
+                    str(ROSMsg2CSVLine.orienation_to_yaw(msg_.pose.pose.orientation))]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_QUATERNION:
+            t = float(t_.secs) + float(t_.nsecs) * 1e-9
+            return ["%f" % (t), "0", "0", str(ROSMsg2CSVLine.orienation_to_yaw(msg_.orientation))]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_QUATERNIONSTAMPED:
+            return ["%f" % msg_.header.stamp.to_sec(), "0", "0", str(ROSMsg2CSVLine.orienation_to_yaw(msg_.orientation))]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_TRANSFORM:
+            t = float(t_.secs) + float(t_.nsecs) * 1e-9
+            return ["%f" % (t), str(msg_.translation.x), str(msg_.translation.y),
+                    str(ROSMsg2CSVLine.orienation_to_yaw(msg_.rotation))]
+
+        if msg_type == ROSMessageTypes.GEOMETRY_MSGS_TRANSFORMSTAMPED:
+            return ["%f" % msg_.header.stamp.to_sec(), str(msg_.transform.translation.x),
+                    str(msg_.transform.translation.y),
+                    str(ROSMsg2CSVLine.orienation_to_yaw(msg_.rotation))]
         # else:
         return None
 

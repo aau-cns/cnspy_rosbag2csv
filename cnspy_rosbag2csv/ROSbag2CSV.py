@@ -189,7 +189,8 @@ class ROSbag2CSV:
         ## CLEANUP:
         # close all csv files
         for topicName in topic_list:
-            dict_csvfile_hdls[topicName].close()
+            if topicName in dict_csvfile_hdls and dict_csvfile_hdls[topicName]:
+                dict_csvfile_hdls[topicName].close()
 
         # check if a topic was found by checking if the topic header was written
         for topicName in topic_list:
