@@ -29,7 +29,7 @@ class ROSbagMerge:
         pass
 
     @staticmethod
-    def on_white_list(topic, white_list):
+    def on_white_list(topic, white_list) -> bool:
         if white_list is None:
             return True
         else:
@@ -38,10 +38,19 @@ class ROSbagMerge:
                     return True
         return False
 
+    @staticmethod
+    def on_black_list(topic, black_list) -> bool:
+        if black_list is None:
+            return False
+        else:
+            for x in black_list:
+                if topic.find(x) != -1:
+                    return True
+        return False
 
     @staticmethod
     def extract(outbag_name, input_dir=None, input_files=None, verbose=False,
-                use_header_timestamp=True, white_list=None):
+                use_header_timestamp=True, white_list=None, black_list=None):
         if input_dir is not None and input_files is not None:
             print("ROSbagMerge: specify either input_dir or input_files!")
             return False
@@ -79,7 +88,6 @@ class ROSbagMerge:
         except:
             pass
 
-
         if verbose:
             print("ROSbagMerge:")
             print("* output bagfile name: " + str(outbag_name))
@@ -95,6 +103,10 @@ class ROSbagMerge:
                 for x in white_list:
                     print("*   %s" % str(x))
 
+            if black_list:
+                print("* black_list:")
+                for x in black_list:
+                    print("*   %s" % str(x))
             print("* result_dir: \t " + str(folder))
             pass
 
@@ -126,9 +138,11 @@ class ROSbagMerge:
                     dict_use_topic = dict()
                     for t in info_dict['topics']:
                         topic_name = t['topic']
-                        dict_use_topic[topic_name] = ROSbagMerge.on_white_list(topic=topic_name, white_list=white_list)
+                        dict_use_topic[topic_name] = ROSbagMerge.on_white_list(topic=topic_name, white_list=white_list) \
+                                                     and not ROSbagMerge.on_black_list(topic=topic_name,
+                                                                                       black_list=black_list)
 
-                    total_num_msgs = total_num_msgs+ num_messages
+                    total_num_msgs = total_num_msgs + num_messages
                     # merge all topics...
                     for topic, msg, t in tqdm(bag.read_messages(), total=num_messages, unit="msgs"):
                         if dict_use_topic[topic]:
@@ -142,15 +156,16 @@ class ROSbagMerge:
 
             if verbose:
                 print("* total number merged: " + str(num_merged) + " of " + str(total_num_msgs) +
-                      " (" + str((int((1000.0*num_merged)/total_num_msgs)/10)) + "%)")
+                      " (" + str((int((1000.0 * num_merged) / total_num_msgs) / 10)) + "%)")
 
             outbag.close()
             pass
         return True
 
-#--outbag_name /home/jungr/workspace/datasets/MultiAgentUWB/EuRoC_D140_A0_Mesh0/run1/sim_tp.bag
-#--input_dir /home/jungr/workspace/datasets/MultiAgentUWB/EuRoC_D140_A0_Mesh0/run1/bags
-#--verbose
+
+# --outbag_name /home/jungr/workspace/datasets/MultiAgentUWB/EuRoC_D140_A0_Mesh0/run1/sim_tp.bag
+# --input_dir /home/jungr/workspace/datasets/MultiAgentUWB/EuRoC_D140_A0_Mesh0/run1/bags
+# --verbose
 
 def main():
     parser = argparse.ArgumentParser(
@@ -166,6 +181,8 @@ def main():
                         help='overwrites the bag time with the header time stamp', default=False)
     parser.add_argument('-l', '--white_list', type=str, nargs='+',
                         help='white list of topic names or fractions of it that are expected', default=None)
+    parser.add_argument('-b', '--black_list', type=str, nargs='+',
+                        help='black list of topic names or fractions of it that are excluded', default=None)
     tp_start = time.time()
     args = parser.parse_args()
 
@@ -174,7 +191,8 @@ def main():
                            input_files=args.input_files,
                            verbose=args.verbose,
                            use_header_timestamp=args.use_header_timestamp,
-                           white_list=args.white_list):
+                           white_list=args.white_list,
+                           black_list=args.black_list):
         print(" ")
         print("finished after [%s sec]\n" % str(time.time() - tp_start))
     else:

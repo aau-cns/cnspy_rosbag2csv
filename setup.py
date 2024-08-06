@@ -13,7 +13,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='cnspy_rosbag2csv',
-    version="0.2.5",
+    version="0.2.6",
     author='Roland Jung',
     author_email='roland.jung@aau.at',    
     description='ROS1 rosbag to CSV file converter and vice versa.',
@@ -40,7 +40,6 @@ setup(
             'ROSbag2CSV = cnspy_rosbag2csv.ROSbag2CSV:main',
             'ROSbag_ReTimestamp = cnspy_rosbag2csv.ROSbag_ReTimestamp:main',
             'ROSbagMerge = cnspy_rosbag2csv.ROSbagMerge:main',
-
         ],
     },
 )
